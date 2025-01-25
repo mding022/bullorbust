@@ -85,7 +85,7 @@ const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
 };
 
 export default function BullOrBust() {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true); //TODO: change to false
     const [username, setUsername] = useState("default-user");
 
     const containerVariants = {
@@ -137,8 +137,8 @@ export default function BullOrBust() {
                     <h1 className="text-2xl font-bold">NBC B/B Markets</h1>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span role="img" aria-label="User icon">👤</span>
-                    <span>{username}</span>
+                    <a href="#"><span className="mr-3 hover:underline underline-offset-8">🏆&nbsp;leaderboards</span></a>
+                    <span>👤&nbsp;{username}</span>
                 </div>
             </header>
             <motion.main className="p-4 grid grid-cols-2 gap-4 overflow-hidden">
@@ -152,7 +152,7 @@ export default function BullOrBust() {
                             <p className="text-sm text-muted-foreground pb-5">Profit/Loss: $0</p>
                         </CardContent>
                         <CardHeader>
-                            <CardTitle>Total Assets</CardTitle>
+                            <CardTitle>Realtime Portfolio Value</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1"><AssetChart /></CardContent>
                     </Card>
