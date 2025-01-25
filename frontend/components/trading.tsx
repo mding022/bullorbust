@@ -61,6 +61,7 @@ const LoginPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
                         onChange={(e) => setUsername(e.target.value)}
                         className="w-full p-2 border rounded"
                         placeholder="Enter username"
+                        autoFocus
                     />
                 </div>
                 <div className="mb-4">
@@ -219,11 +220,33 @@ export default function BullOrBust() {
                                 type="text"
                                 placeholder="Enter symbol"
                                 className="w-full p-2 border rounded"
+                                autoFocus
                             />
                             <div className="mt-2">
                                 <p className="text-2xl font-bold">Stock Price: $123.45</p>
                                 <p className="text-sm text-muted-foreground">24h Change: +1.5%</p>
-                                < StockChart />
+                                <StockChart />
+                            </div>
+                            <div className="mt-4 flex items-center space-x-2 w-full mb-5">
+                                <input
+                                    type="number"
+                                    placeholder="Quantity"
+                                    className="flex-grow p-2 border rounded"
+                                />
+                                <div className="flex space-x-2">
+                                    <a
+                                        href="#"
+                                        className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition"
+                                    >
+                                        Buy
+                                    </a>
+                                    <a
+                                        href="#"
+                                        className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
+                                    >
+                                        Sell
+                                    </a>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>

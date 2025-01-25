@@ -41,7 +41,6 @@ const Chart = () => {
                 const now = Math.floor(Date.now() / 1000);
                 const priceChange = (Math.random() - 0.5) * 2;
                 const newPrice = lastPrice + priceChange;
-
                 if (now > lastTime) {
                     lastTime = now;
                     series.update({ time: now, value: newPrice });
@@ -64,7 +63,7 @@ const Chart = () => {
         };
     }, []);
 
-    return <div ref={chartContainerRef} className="w-full h-80" />;
+    return <div ref={chartContainerRef} className="w-full h-48" />;
 };
 
 export default Chart;
