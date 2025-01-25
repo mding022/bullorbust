@@ -24,9 +24,9 @@ const Chart = () => {
 
         const chart = createChart(chartContainerRef.current, chartOptions);
         const series = chart.addAreaSeries({
-            lineColor: "#2196F3",
-            topColor: "rgba(33, 150, 243, 0.3)",
-            bottomColor: "rgba(33, 150, 243, 0.0)"
+            lineColor: "#FFC107",
+            topColor: "rgba(255, 193, 7, 0.3)",
+            bottomColor: "rgba(255, 193, 7, 0.0)"
         });
 
         series.setData([]);

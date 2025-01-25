@@ -9,29 +9,35 @@ import { motion } from "framer-motion";
 import AssetChart from './stream/assetchart'
 import StockQuote from "./stockquote";
 
-const LoginPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
+const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [isRegistering, setIsRegistering] = useState(false);
 
-    const handleLogin = () => {
-        if (username && password) {
-            fetch("http://localhost:8080/login", {
+    const handleAuth = async () => {
+        const endpoint = isRegistering
+            ? "https://normal-heroic-wren.ngrok-free.app/auth/register"
+            : "https://normal-heroic-wren.ngrok-free.app/auth/login";
+
+        try {
+            const response = await fetch(endpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ username, password }),
-            })
-                .then((response) => response.json())
-                // .then((data) => {
-                //     if (data.userid && data.userid !== "-1") {
-                //         onLogin(data.userid);
-                //     } else {
-                //         alert("Invalid login credentials");
-                //     }
-                // })
-                // .catch(() => alert("Error logging in"));
-                .catch(() => onLogin("admin"))
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            if (data.userId) {
+                onLogin(username);
+            } else {
+                alert("Authentication failed");
+            }
+        } catch (error) {
+            alert("Error during authentication");
         }
     };
 
@@ -51,7 +57,9 @@ const LoginPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
                             fill="#e21e26"
                         />
                     </svg>
-                    <h2 className="text-2xl font-semibold mb-0">Login</h2>
+                    <h2 className="text-2xl font-semibold mb-0">
+                        {isRegistering ? "Register" : "Login"}
+                    </h2>
                 </div>
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-2">Username</label>
@@ -75,10 +83,16 @@ const LoginPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
                     />
                 </div>
                 <button
-                    onClick={handleLogin}
-                    className="w-full p-2 bg-red-400 text-white rounded"
+                    onClick={handleAuth}
+                    className="w-full p-2 bg-red-400 text-white rounded mb-2"
                 >
-                    Login
+                    {isRegistering ? "Register" : "Login"}
+                </button>
+                <button
+                    onClick={() => setIsRegistering(!isRegistering)}
+                    className="w-full p-2 text-red-400 border border-red-400 rounded"
+                >
+                    Switch to {isRegistering ? "Login" : "Register"}
                 </button>
             </div>
         </div>
@@ -86,8 +100,8 @@ const LoginPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
 };
 
 export default function BullOrBust() {
-    const [loggedIn, setLoggedIn] = useState(true); //TODO: change to false
-    const [username, setUsername] = useState("default-user");
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [username, setUsername] = useState("");
 
     const containerVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -114,9 +128,10 @@ export default function BullOrBust() {
     };
 
     if (!loggedIn) {
-        return <LoginPage onLogin={handleLoginSuccess} />;
+        return <AuthPage onLogin={handleLoginSuccess} />;
     }
 
+    // Rest of the component remains the same as in the original code
     return (
         <motion.div
             className="min-h-screen bg-background text-foreground flex flex-col"
@@ -142,24 +157,25 @@ export default function BullOrBust() {
                     <span>👤&nbsp;{username}</span>
                 </div>
             </header>
-            <motion.main className="p-4 grid grid-cols-3 gap-4 overflow-hidden">
+            {/* Rest of the component remains the same */}
+            <motion.main className="p-3 grid grid-cols-3 gap-2 overflow-hidden">
                 <motion.div className="flex flex-col gap-4" variants={cardVariants}>
                     <Card className="flex flex-col p-0">
                         <CardHeader>
-                            <CardTitle>Total Assets</CardTitle>
+                            <CardTitle>Total Assets Under Management (AUM)</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1">
                             <p className="text-3xl font-bold">$100,000</p>
                             <p className="text-base text-muted-foreground pb-5">Profit/Loss: $0.00</p>
                         </CardContent>
                         <CardHeader>
-                            <CardTitle>Realtime Portfolio Value</CardTitle>
+                            <CardTitle>Realtime BB Fund Value</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1"><AssetChart /></CardContent>
                     </Card>
                     <Card className="flex-1 flex flex-col">
                         <CardHeader>
-                            <CardTitle>Positions</CardTitle>
+                            <CardTitle>Open Positions</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1 overflow-x-auto">
                             <ScrollArea className="h-full">
@@ -190,7 +206,10 @@ export default function BullOrBust() {
                 <motion.div className="flex flex-col gap-4 col-span-2" variants={cardVariants}>
                     <Card className="flex-1 flex flex-col h-1/3">
                         <CardHeader>
-                            <CardTitle><span className="text-red-800">BB</span>loomberg Terminal News</CardTitle>
+                            <CardTitle className="flex items-center">
+                                <span className="text-red-800">BB</span>loomberg Terminal News
+                                <span className="ml-2 w-4 h-4 rounded-full bg-lime-400"></span> {/* Small lime circle */}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1 overflow-auto">
                             <ScrollArea className="h-full">

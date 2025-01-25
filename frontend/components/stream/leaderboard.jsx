@@ -1,17 +1,39 @@
+"use client"
+
+import { useEffect, useState } from "react";
+
 export default function Leaderboard() {
-    const topUsers = [
-        { id: 1, name: "Alice", score: 200000 },
-        { id: 2, name: "Bob", score: 180000 },
-        { id: 3, name: "User", score: 150000 },
-        { id: 4, name: "Charlie", score: 130000 },
-        { id: 5, name: "David", score: 120000 },
-        { id: 6, name: "Eve", score: 110000 },
-        { id: 7, name: "default-user", score: 100000 },
-        { id: 8, name: "Grace", score: 95000 },
-        { id: 9, name: "Hannah", score: 90000 },
-        { id: 10, name: "Ivy", score: 85000 },
-        { id: 11, name: "Jack", score: 80000 },
-    ];
+    const [topUsers, setTopUsers] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(
+                    "https://normal-heroic-wren.ngrok-free.app/leaderboard",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: 'include',
+                    }
+                );
+
+                // Check if the response is OK
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Get the raw text response
+                const rawText = await response.text();
+                setData(rawText); // Store the raw text in state
+            } catch (error) {
+                console.error("Fetch error: ", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <div className="w-full flex items-center justify-center h-screen bg-gray-100">
@@ -40,16 +62,16 @@ export default function Leaderboard() {
                     <div>
                         <h3 className="font-semibold mb-4">Top 10 Asset Managers</h3>
                         <div className="space-y-2">
-                            {topUsers.slice(0, 10).map((user, index) => (
+                            {topUsers.map((user, index) => (
                                 <div
-                                    key={user.id}
+                                    key={index}
                                     className={`flex justify-between items-center p-2 rounded-md bg-[#EEEEEE] animate-stagger-fade-in opacity-0`}
                                     style={{
                                         animationDelay: `${index * 0.1}s`,
                                     }}
                                 >
-                                    <span className="font-medium">{index + 1}. {user.name}</span>
-                                    <span>{user.score.toLocaleString()}</span>
+                                    <span className="font-medium">{index + 1}. {user.username}</span>
+                                    {/* <span>{user.totalBalance.toLocaleString()}</span> */}
                                 </div>
                             ))}
                         </div>
