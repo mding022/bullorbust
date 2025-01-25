@@ -144,11 +144,11 @@ const activeNewsEffects = new Map<string, { effect: NewsEffect, remainingDuratio
 // Define industry types for each stock
 const stockIndustries = {
     'GLD': 'mining',
-    'UNCF': 'agriculture',
-    'CFC': 'fisheries',
-    'MDS': 'defense',
-    'OIL': 'energy',
-    'CREC': 'real_estate'
+    'FISHRS': 'fisheries',
+    'CRUDE': 'energy',
+    'HOUSES': 'real_estate',
+    'FARMRS': 'agriculture',
+    'MLTRY': 'defense'
 } as const;
 
 const newsPrompts = {
@@ -452,9 +452,18 @@ Return ONLY the JSON, no other text.`;
 
 function generateStockPrice(currentPrice: number, symbol: string): number {
     const newsEffect = activeNewsEffects.get(symbol);
-    const baseVolatility = 0.01; // Reduced base volatility
+    const baseVolatility = 0.002; // 0.2% base volatility
     let volatility = baseVolatility;
     let trend = 0;
+
+    // Random walk component (0.3% max movement)
+    const randomWalk = (Math.random() - 0.5) * 0.003 * currentPrice;
+    
+    // Noise component (0.1% max noise)
+    const noise = (Math.random() - 0.5) * 0.001 * currentPrice;
+    
+    // Small trend bias (-0.05% to +0.05%)
+    const trendBias = (Math.random() - 0.5) * 0.0005 * currentPrice;
 
     if (newsEffect) {
         volatility = newsEffect.effect.volatility;
@@ -463,12 +472,12 @@ function generateStockPrice(currentPrice: number, symbol: string): number {
             // Initial pump phase (first 25% of duration)
             const pumpPhaseDuration = Math.floor(newsEffect.effect.duration * 0.25);
             if (newsEffect.remainingDuration > newsEffect.effect.duration - pumpPhaseDuration) {
-                trend = 0.15; // 15% up during pump
+                trend = 0.15 / pumpPhaseDuration; // Distribute 15% up over pump phase
             } else {
-                trend = (newsEffect.effect.priceMultiplier - 1.15) / (newsEffect.effect.duration - pumpPhaseDuration); // Rest is decline
+                trend = (newsEffect.effect.priceMultiplier - 1.15) / (newsEffect.effect.duration - pumpPhaseDuration);
             }
         } else if (newsEffect.effect.type === 'jump') {
-            // Rapid initial jump followed by stabilization
+            // Gradual jump over duration
             const jumpPhaseDuration = Math.floor(newsEffect.effect.duration * 0.5);
             if (newsEffect.remainingDuration > newsEffect.effect.duration - jumpPhaseDuration) {
                 trend = (newsEffect.effect.priceMultiplier - 1) / jumpPhaseDuration;
@@ -476,16 +485,16 @@ function generateStockPrice(currentPrice: number, symbol: string): number {
                 trend = 0; // Stabilize after the jump
             }
         } else if (newsEffect.effect.type === 'fall') {
-            // Sharp initial drop followed by slower decline
+            // More gradual fall
             const sharpDropDuration = Math.floor(newsEffect.effect.duration * 0.4);
             if (newsEffect.remainingDuration > newsEffect.effect.duration - sharpDropDuration) {
-                trend = -0.20; // 20% sharp drop
+                trend = -0.20 / sharpDropDuration; // Distribute 20% drop
             } else {
                 trend = (newsEffect.effect.priceMultiplier - 0.8) / (newsEffect.effect.duration - sharpDropDuration);
             }
         } else {
-            // Neutral news: small random movements
-            trend = (Math.random() - 0.5) * 0.01; // ±0.5% random drift
+            // Neutral news: slightly larger random movements
+            trend = (Math.random() - 0.5) * 0.002; // ±0.1% random drift
         }
 
         // Decrease remaining duration
@@ -497,8 +506,12 @@ function generateStockPrice(currentPrice: number, symbol: string): number {
 
     const randomChange = currentPrice * (Math.random() * 2 * volatility - volatility);
     const trendChange = currentPrice * trend;
-    // Round to 2 decimal places
-    return Number((Math.max(currentPrice + randomChange + trendChange, 0.01)).toFixed(2));
+    
+    // Combine all components: baseline trend, news effect, random walk, noise, and trend bias
+    const newPrice = currentPrice + randomChange + trendChange + randomWalk + noise + trendBias;
+    
+    // Ensure price doesn't go below 0.01 and round to 2 decimal places
+    return Number(Math.max(newPrice, 0.01).toFixed(2));
 }
 
 async function updateStockPrices(priceUpdates: { symbol: string, oldPrice: number, newPrice: number, timestamp: Date }[]) {
@@ -713,7 +726,9 @@ setInterval(async () => {
 // News generation interval (every 15 seconds)
 setInterval(async () => {
     try {
-        // Get all stocks and shuffle them
+        console.log('Starting news generation...');
+        
+        // Get all stocks first
         const stocks = await prisma.stock.findMany({
             select: {
                 symbol: true,
@@ -721,22 +736,28 @@ setInterval(async () => {
             }
         });
         
-        if (stocks.length === 0) return;
-
-        // Fisher-Yates shuffle algorithm
-        for (let i = stocks.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [stocks[i], stocks[j]] = [stocks[j], stocks[i]];
+        console.log('Available stocks:', stocks.map(s => s.symbol));
+        
+        if (stocks.length === 0) {
+            console.error('No stocks found in database');
+            return;
         }
 
-        // Take the first stock after shuffling
-        const selectedStock = stocks[0];
+        // Select a random stock
+        const randomIndex = Math.floor(Math.random() * stocks.length);
+        const selectedStock = stocks[randomIndex];
+        
         console.log('Selected stock for news:', selectedStock.symbol);
 
         const newsTypes: NewsType[] = ['jump', 'neutral', 'pump_dump', 'fall'];
         const newsType = newsTypes[Math.floor(Math.random() * newsTypes.length)];
+        console.log('Selected news type:', newsType);
 
+        console.log('Generating news headline...');
         const news = await generateNewsHeadline(selectedStock.symbol, newsType);
+        console.log('Generated news:', news);
+
+        console.log('Saving news to database...');
         const savedNews = await prisma.news.create({
             data: {
                 title: news.title,
@@ -744,6 +765,7 @@ setInterval(async () => {
                 tickers: { symbol: selectedStock.symbol, effect: newsType }
             }
         });
+        console.log('Saved news:', savedNews);
 
         lastNewsId = savedNews.id;
 
@@ -752,8 +774,9 @@ setInterval(async () => {
             effect: newsEffects[newsType],
             remainingDuration: newsEffects[newsType].duration
         });
+        console.log('Applied news effect to', selectedStock.symbol);
     } catch (error) {
-        console.error('Error generating news:', error);
+        console.error('Error in news generation:', error);
     }
 }, 15000);
 
