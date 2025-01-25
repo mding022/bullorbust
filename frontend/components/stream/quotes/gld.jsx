@@ -34,38 +34,32 @@ const Chart = () => {
         chart.timeScale().fitContent();
         chart.timeScale().scrollToPosition(5);
 
-        const ws = new WebSocket("ws://normal-heroic-wren.ngrok-free.app/ws/live");
-
-        ws.onopen = () => {
-            console.log("WebSocket connection established");
-        };
-
-        ws.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            if (message.type === "price") {
-                const gldData = message.data.find(item => item.symbol === "GLD");
-                if (gldData) {
-                    const timestamp = new Date(gldData.timestamp).getTime() / 1000; // Convert to Unix timestamp
-                    const newPrice = gldData.newPrice;
-                    series.update({ time: timestamp, value: newPrice });
+        const fetchLiveData = async () => {
+            try {
+                const response = await fetch("https://normal-heroic-wren.ngrok-free.app/market/price/GLD", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    },
+                });
+                const data = await response.json();
+                if (data.price) {
+                    series.update({ time: Math.floor(Date.now() / 1000), value: data.price });
                 }
+            } catch (error) {
+                console.error("Error fetching live data:", error);
             }
         };
 
-        ws.onerror = (error) => {
-            console.error("WebSocket Error: ", error);
-        };
-
-        ws.onclose = () => {
-            console.log("WebSocket connection closed");
-        };
+        const intervalID = setInterval(fetchLiveData, 500); // Fetch data every 2 seconds
 
         window.addEventListener("resize", () => {
             chart.applyOptions({ height: 100 });
         });
 
         return () => {
-            ws.close();
+            clearInterval(intervalID);
             chart.remove();
         };
     }, []);
