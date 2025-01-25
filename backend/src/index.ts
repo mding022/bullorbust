@@ -2,6 +2,8 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import expressWs from 'express-ws';
 import { authRouter } from "./routers/auth";
+import { startOutputParser } from "./chain/market";
+import leadRouter from "./routers/leaderboard";
 
 dotenv.config();
 
@@ -39,6 +41,18 @@ app.use("/auth", authRouter);
 
 app.use('/ws', router);
 
+
+app.use('/leaderboard', leadRouter);
+
+
+
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+async function main() {
+  const result = await startOutputParser();
+  console.log(result);
+}
+
+main();
