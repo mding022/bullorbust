@@ -13,6 +13,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+model Stock {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId 
+  symbol            String   @unique 
+  price             Int[]    @default([]) // array expected to stay 120 length
+  companyName       String
+  companyDescription String
+  imageUrl          String
+}
+
 model User {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId /
+  username  String   @unique // Unique username for the user
+  password  String
+  name      String
+//  holding   Stock    @relation(field: [tickers], references: [symbol])
+//  tickers   String[] @default([]) // cant work because this isnt a scalar
+//  tickers   String[] @default[] // TODO: try to enforce this, if not to do so logically
+  holding   Json     // to have [{stock: Stock.symbol. ammount: int}, ... ,]
+  userdata  Json 
+}
+
+
+model News {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId  
+  title     String
+  desc      String
+  tickers   Json // middlewear to enforce json {symbol: str, effect: int}
+
 }
