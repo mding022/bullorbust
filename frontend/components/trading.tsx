@@ -142,7 +142,7 @@ export default function BullOrBust() {
                     <span>👤&nbsp;{username}</span>
                 </div>
             </header>
-            <motion.main className="p-4 grid grid-cols-2 gap-4 overflow-hidden">
+            <motion.main className="p-4 grid grid-cols-3 gap-4 overflow-hidden">
                 <motion.div className="flex flex-col gap-4" variants={cardVariants}>
                     <Card className="flex flex-col p-0">
                         <CardHeader>
@@ -187,7 +187,7 @@ export default function BullOrBust() {
                         </CardContent>
                     </Card>
                 </motion.div>
-                <motion.div className="flex flex-col gap-4" variants={cardVariants}>
+                <motion.div className="flex flex-col gap-4 col-span-2" variants={cardVariants}>
                     <Card className="flex-1 flex flex-col h-1/3">
                         <CardHeader>
                             <CardTitle><span className="text-red-800">BB</span>loomberg Terminal News</CardTitle>

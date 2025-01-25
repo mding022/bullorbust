@@ -24,14 +24,14 @@ const Chart = () => {
 
         const chart = createChart(chartContainerRef.current, chartOptions);
         const series = chart.addAreaSeries({
-            lineColor: "#d03732",
-            topColor: "rgba(288, 55, 50, 0.3)",
-            bottomColor: "rgba(288, 55, 50, 0)",
+            lineColor: "#2196F3",
+            topColor: "rgba(33, 150, 243, 0.3)",
+            bottomColor: "rgba(33, 150, 243, 0.0)"
         });
 
         series.setData([]);
         chart.timeScale().fitContent();
-        chart.timeScale().scrollToPosition(5, true);
+        chart.timeScale().scrollToPosition(5);
 
         const fetchLiveData = (() => {
             let lastTime = Math.floor(Date.now() / 1000);
@@ -41,7 +41,6 @@ const Chart = () => {
                 const now = Math.floor(Date.now() / 1000);
                 const priceChange = (Math.random() - 0.5) * 2;
                 const newPrice = lastPrice + priceChange;
-
                 if (now > lastTime) {
                     lastTime = now;
                     series.update({ time: now, value: newPrice });
@@ -64,7 +63,7 @@ const Chart = () => {
         };
     }, []);
 
-    return <div ref={chartContainerRef} className="w-full h-52" />;
+    return <div ref={chartContainerRef} className="w-full h-48" />;
 };
 
 export default Chart;
