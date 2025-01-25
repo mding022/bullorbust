@@ -6,33 +6,22 @@ export default function Leaderboard() {
     const [topUsers, setTopUsers] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const handleAuth = async () => {
             try {
-                const response = await fetch(
-                    "http://localhost:8080/leaderboard",
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        credentials: 'include',
-                    }
-                );
-
-                // Check if the response is OK
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // Get the raw text response
-                const rawText = await response.text();
-                setData(rawText); // Store the raw text in state
-            } catch (error) {
-                console.error("Fetch error: ", error);
+                const response = await fetch("http://localhost:8080/leaderboard", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                console.log(data)
+            } catch(error) { 
+                console.log(error)
             }
         };
-
-        fetchData();
+        handleAuth();
     }, []);
 
     return (
