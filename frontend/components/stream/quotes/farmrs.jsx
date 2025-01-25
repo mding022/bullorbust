@@ -13,6 +13,7 @@ const Chart = () => {
             layout: {
                 textColor: "black",
                 background: { type: "solid", color: "white" },
+attributionLogo: false
             },
             timeScale: {
                 timeVisible: true,
@@ -24,9 +25,9 @@ const Chart = () => {
 
         const chart = createChart(chartContainerRef.current, chartOptions);
         const series = chart.addAreaSeries({
-            lineColor: "#2196F3",
-            topColor: "rgba(33, 150, 243, 0.3)",
-            bottomColor: "rgba(33, 150, 243, 0.0)"
+            lineColor: "#4CAF50",
+            topColor: "rgba(76, 175, 80, 0.3)",
+            bottomColor: "rgba(76, 175, 80, 0.0)"
         });
 
         series.setData([]);

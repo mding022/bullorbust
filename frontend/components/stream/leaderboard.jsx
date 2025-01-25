@@ -1,17 +1,42 @@
+"use client"
+
+import { useEffect, useState } from "react";
+
 export default function Leaderboard() {
-    const topUsers = [
-        { id: 1, name: "Alice", score: 200000 },
-        { id: 2, name: "Bob", score: 180000 },
-        { id: 3, name: "User", score: 150000 },
-        { id: 4, name: "Charlie", score: 130000 },
-        { id: 5, name: "David", score: 120000 },
-        { id: 6, name: "Eve", score: 110000 },
-        { id: 7, name: "default-user", score: 100000 },
-        { id: 8, name: "Grace", score: 95000 },
-        { id: 9, name: "Hannah", score: 90000 },
-        { id: 10, name: "Ivy", score: 85000 },
-        { id: 11, name: "Jack", score: 80000 },
-    ];
+    const [topUsers, setTopUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const handleAuth = async () => {
+            try {
+                const response = await fetch("https://normal-heroic-wren.ngrok-free.app/leaderboard", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    },
+                });
+                const data = await response.json();
+
+                if (data.leaderboard && Array.isArray(data.leaderboard)) {
+                    setTopUsers(data.leaderboard.slice(0, 10));
+                }
+            } catch(error) { 
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        handleAuth();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="w-full flex items-center justify-center h-screen bg-gray-100 animate-fade-in">
+                <div className="text-lg font-semibold">Loading leaderboard...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full flex items-center justify-center h-screen bg-gray-100">
@@ -40,16 +65,16 @@ export default function Leaderboard() {
                     <div>
                         <h3 className="font-semibold mb-4">Top 10 Asset Managers</h3>
                         <div className="space-y-2">
-                            {topUsers.slice(0, 10).map((user, index) => (
+                            {topUsers.map((user, index) => (
                                 <div
-                                    key={user.id}
+                                    key={index}
                                     className={`flex justify-between items-center p-2 rounded-md bg-[#EEEEEE] animate-stagger-fade-in opacity-0`}
                                     style={{
                                         animationDelay: `${index * 0.1}s`,
                                     }}
                                 >
-                                    <span className="font-medium">{index + 1}. {user.name}</span>
-                                    <span>{user.score.toLocaleString()}</span>
+                                    <span className="font-medium">{index + 1}. {user.username}</span>
+                                    <span>{user.totalBalance.toLocaleString()}</span>
                                 </div>
                             ))}
                         </div>

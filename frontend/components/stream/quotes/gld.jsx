@@ -13,6 +13,7 @@ const Chart = () => {
             layout: {
                 textColor: "black",
                 background: { type: "solid", color: "white" },
+                attributionLogo: false
             },
             timeScale: {
                 timeVisible: true,
@@ -24,41 +25,47 @@ const Chart = () => {
 
         const chart = createChart(chartContainerRef.current, chartOptions);
         const series = chart.addAreaSeries({
-            lineColor: "#2196F3",
-            topColor: "rgba(33, 150, 243, 0.3)",
-            bottomColor: "rgba(33, 150, 243, 0.0)"
+            lineColor: "#FFC107",
+            topColor: "rgba(255, 193, 7, 0.3)",
+            bottomColor: "rgba(255, 193, 7, 0.0)"
         });
 
         series.setData([]);
         chart.timeScale().fitContent();
         chart.timeScale().scrollToPosition(5);
 
-        const fetchLiveData = (() => {
-            let lastTime = Math.floor(Date.now() / 1000);
-            let lastPrice = 100;
+        const ws = new WebSocket("ws://normal-heroic-wren.ngrok-free.app/ws/live");
 
-            return () => {
-                const now = Math.floor(Date.now() / 1000);
-                const priceChange = (Math.random() - 0.5) * 2;
-                const newPrice = lastPrice + priceChange;
-                if (now > lastTime) {
-                    lastTime = now;
-                    series.update({ time: now, value: newPrice });
+        ws.onopen = () => {
+            console.log("WebSocket connection established");
+        };
+
+        ws.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "price") {
+                const gldData = message.data.find(item => item.symbol === "GLD");
+                if (gldData) {
+                    const timestamp = new Date(gldData.timestamp).getTime() / 1000; // Convert to Unix timestamp
+                    const newPrice = gldData.newPrice;
+                    series.update({ time: timestamp, value: newPrice });
                 }
-                lastPrice = newPrice;
-            };
-        })();
+            }
+        };
 
-        const intervalID = setInterval(() => {
-            fetchLiveData();
-        }, 100);
+        ws.onerror = (error) => {
+            console.error("WebSocket Error: ", error);
+        };
+
+        ws.onclose = () => {
+            console.log("WebSocket connection closed");
+        };
 
         window.addEventListener("resize", () => {
             chart.applyOptions({ height: 100 });
         });
 
         return () => {
-            clearInterval(intervalID);
+            ws.close();
             chart.remove();
         };
     }, []);

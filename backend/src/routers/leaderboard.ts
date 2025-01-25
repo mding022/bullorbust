@@ -32,7 +32,9 @@ leadRouter.get('/', isAuthenticated, async (req, res) => {
     });
     
     leaderboard.sort((a, b) => b.totalBalance - a.totalBalance);
-    res.status(200).json({ leaderboard });
+    
+    const top10 = leaderboard.slice(0, 10);
+    res.status(200).json({ leaderboard: top10 });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
