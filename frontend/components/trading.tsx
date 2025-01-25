@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { fakeHoldings, fakeNews } from "./data";
 import { motion } from "framer-motion";
+import Chart from './stream/chart'
 
 const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
     const [username, setUsername] = useState("");
@@ -219,6 +220,7 @@ export default function BullOrBust() {
                             <div className="mt-2">
                                 <p className="text-2xl font-bold">Stock Price: $123.45</p>
                                 <p className="text-sm text-muted-foreground">24h Change: +1.5%</p>
+                                < Chart />
                             </div>
                         </CardContent>
                     </Card>
