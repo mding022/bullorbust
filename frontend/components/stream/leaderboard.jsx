@@ -9,7 +9,7 @@ export default function Leaderboard() {
         const fetchData = async () => {
             try {
                 const response = await fetch(
-                    "https://normal-heroic-wren.ngrok-free.app/leaderboard",
+                    "http://localhost:8080/leaderboard",
                     {
                         method: "GET",
                         headers: {

@@ -16,8 +16,8 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
 
     const handleAuth = async () => {
         const endpoint = isRegistering
-            ? "https://normal-heroic-wren.ngrok-free.app/auth/register"
-            : "https://normal-heroic-wren.ngrok-free.app/auth/login";
+            ? "http://localhost:8080/auth/register"
+            : "http://localhost:8080/auth/login";
 
         try {
             const response = await fetch(endpoint, {
