@@ -19,7 +19,7 @@ const Chart = () => {
                 secondsVisible: true,
                 tickMarkFormatter: (time) => new Date(time * 1000).toLocaleTimeString(),
             },
-            height: 200,
+            height: 100,
         };
 
         const chart = createChart(chartContainerRef.current, chartOptions);
@@ -54,7 +54,7 @@ const Chart = () => {
         }, 100);
 
         window.addEventListener("resize", () => {
-            chart.applyOptions({ height: 200 });
+            chart.applyOptions({ height: 100 });
         });
 
         return () => {
@@ -63,7 +63,7 @@ const Chart = () => {
         };
     }, []);
 
-    return <div ref={chartContainerRef} className="w-full h-48" />;
+    return <div ref={chartContainerRef} className="w-full h-28" />;
 };
 
 export default Chart;
