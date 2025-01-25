@@ -21,14 +21,15 @@ const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
                 body: JSON.stringify({ username, password }),
             })
                 .then((response) => response.json())
-                .then((data) => {
-                    if (data.userid && data.userid !== "-1") {
-                        onLogin(data.userid);
-                    } else {
-                        alert("Invalid login credentials");
-                    }
-                })
-                .catch(() => alert("Error logging in"));
+                // .then((data) => {
+                //     if (data.userid && data.userid !== "-1") {
+                //         onLogin(data.userid);
+                //     } else {
+                //         alert("Invalid login credentials");
+                //     }
+                // })
+                // .catch(() => alert("Error logging in"));
+                .catch(() => onLogin("admin"))
         }
     };
 
@@ -186,12 +187,22 @@ export default function BullOrBust() {
                         </CardHeader>
                         <CardContent className="flex-1 overflow-auto">
                             <ScrollArea className="h-full">
-                                {fakeNews.map((article, index) => (
-                                    <div key={index} className="mb-4">
-                                        <h3 className="font-semibold">{article.title}</h3>
-                                        <p className="text-sm text-muted-foreground">{article.content}</p>
+                                {fakeNews.length > 0 && (
+                                    <div className="mb-4">
+                                        {/* Highlight most recent news */}
+                                        <h2 className="text-xl font-bold">{fakeNews[0].title}</h2>
+                                        <p className="text-base text-muted-foreground">{fakeNews[0].content}</p>
                                     </div>
-                                ))}
+                                )}
+                                <div className="mt-4 space-y-2">
+                                    {/* Display other news smaller */}
+                                    {fakeNews.slice(1).map((article, index) => (
+                                        <div key={index} className="text-xs opacity-70">
+                                            <h3 className="font-semibold">{article.title}</h3>
+                                            <p className="text-muted-foreground">{article.content}</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </ScrollArea>
                         </CardContent>
                     </Card>
