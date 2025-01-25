@@ -50,9 +50,9 @@ app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-async function main() {
-  const result = await startOutputParser();
-  console.log(result);
-}
+// async function main() {
+//   const result = await startOutputParser();
+//   console.log(result);
+// }
 
-main();
+// main();
