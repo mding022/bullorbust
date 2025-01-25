@@ -189,7 +189,7 @@ export default function BullOrBust() {
                 <motion.div className="flex flex-col gap-4" variants={cardVariants}>
                     <Card className="flex-1 flex flex-col h-1/3">
                         <CardHeader>
-                            <CardTitle>News</CardTitle>
+                            <CardTitle><span className="text-red-800">BB</span>loomberg Terminal News</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1 overflow-auto">
                             <ScrollArea className="h-full">
