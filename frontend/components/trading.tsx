@@ -1,47 +1,52 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+"use client"
 
-const fakeHoldings = [
-  { symbol: "AAA", shares: 100, price: 150.25, value: 15025 },
-  { symbol: "BBB", shares: 200, price: 75.5, value: 15100 },
-  { symbol: "CCC", shares: 50, price: 200.0, value: 10000 },
-  { symbol: "DDD", shares: 75, price: 80.0, value: 6000 },
-  { symbol: "EEE", shares: 120, price: 45.75, value: 5490 },
-]
-
-const fakeNews = [
-  {
-    title: "Market Update: Stocks Rally on Economic Data",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    title: "Tech Sector Sees Boost from New Product Launches",
-    content:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-  },
-  {
-    title: "Global Markets React to Policy Changes",
-    content: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-  },
-  {
-    title: "Earnings Season: What to Expect",
-    content:
-      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  },
-]
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { fakeHoldings, fakeNews } from "./data";
 
 export default function BullOrBust() {
+    const [username, setUsername] = useState("default-user");
+    // const fetchUsername = async () => {
+    //     try {
+    //         const response = await fetch("http://localhost:8080/username");
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             setUsername(data.username);
+    //         }
+    //     } catch (error) {
+    //         console.error("Failed to fetch username:", error);
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     fetchUsername();
+    // }, []);
+
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
             <header className="flex justify-between items-center p-4 border-b">
-                <h1 className="text-2xl font-bold">Bull or Bust</h1>
+                <div className="flex items-center gap-2">
+                    <svg
+                        id="logosandtypes_com"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 150 150"
+                        className="h-8 w-8"
+                    >
+                        <path d="M0 0h150v150H0V0z" fill="none" />
+                        <path
+                            d="M90 44.8c-2.1.5-3.6.8-5.2.2-1.2-.7-2.2-1.8-2.9-3L67.6 22.5c-.7-1.2-1.8-2.3-3-3-1.5-.6-3.1-.2-5.2.2l-46 12.5v85.9l46.3-12.4c2.1-.5 3.7-.8 5.2-.3 1.2.7 2.2 1.7 2.9 2.9L82 128c.7 1.2 1.7 2.2 2.9 2.9 1.5.6 3.1.2 5.2-.3l46.2-12.3V32.4L90 44.8z"
+                            fill="#e21e26"
+                        />
+                    </svg>
+                    <h1 className="text-2xl font-bold">B/B Markets</h1>
+                </div>
                 <div className="flex items-center gap-2">
                     <span role="img" aria-label="User icon">
                         👤
                     </span>
-                    <span>username</span>
+                    <span>{username}</span>
                 </div>
             </header>
             <main className="flex-1 p-4 grid grid-cols-2 gap-4 overflow-hidden">
@@ -103,21 +108,14 @@ export default function BullOrBust() {
                     </Card>
                     <Card className="flex-1 flex flex-col h-2/3">
                         <CardHeader>
-                            <CardTitle>Additional Information</CardTitle>
+                            <CardTitle>Stock Quote</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1 overflow-hidden">
                             <ScrollArea className="h-full">
                                 <p className="text-sm text-muted-foreground">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies,
                                     nunc nisl aliquet nunc, vitae aliquam nisl nunc vitae nisl. Sed vitae nisl eget nisl aliquam
-                                    ultricies. Sed vitae nisl eget nisl aliquam ultricies. Sed vitae nisl eget nisl aliquam ultricies. Sed
-                                    vitae nisl eget nisl aliquam ultricies. Sed vitae nisl eget nisl aliquam ultricies. Sed vitae nisl
-                                    eget nisl aliquam ultricies. Sed vitae nisl eget nisl aliquam ultricies. Sed vitae nisl eget nisl
-                                    aliquam ultricies. Sed vitae nisl eget nisl aliquam ultricies. Sed vitae nisl eget nisl aliquam
-                                    ultricies. Sed vitae nisl eget nisl aliquam ultricies. Sed vitae nisl eget nisl aliquam ultricies. Sed
-                                    vitae nisl eget nisl aliquam ultricies. Sed vitae nisl eget nisl aliquam ultricies. Sed vitae nisl
-                                    eget nisl aliquam ultricies. Sed vitae nisl eget nisl aliquam ultricies. Sed vitae nisl eget nisl
-                                    aliquam ultricies. Sed vitae nisl eget nisl aliquam ultricies.
+                                    ultricies.
                                 </p>
                             </ScrollArea>
                         </CardContent>
@@ -125,7 +123,5 @@ export default function BullOrBust() {
                 </div>
             </main>
         </div>
-    )
+    );
 }
-
-

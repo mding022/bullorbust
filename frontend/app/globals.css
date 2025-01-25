@@ -6,6 +6,11 @@ body {
   font-family: 'Outfit', sans-serif;
 }
 
+.font-tangerine {
+  font-family: 'Tangerine', cursive;
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
