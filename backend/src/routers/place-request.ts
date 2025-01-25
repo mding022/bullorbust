@@ -2,7 +2,7 @@
 import { Router } from "express";
 import prisma from "../lib/db";
 import { Stock, User } from "@prisma/client";
-import isAuthenticated from "../lib/isAuthenticated";
+import {isAuthenticated } from "../lib/isAuthenticated";
 
 const requestRouter = Router();
 
