@@ -43,9 +43,9 @@ model News {
 }
 
 model Session {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  userId   String @unique @db.ObjectId
-  user     User   @relation(fields: [userId], references: [id])
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String   @db.ObjectId
+  user     User     @relation(fields: [userId], references: [id])
   expires  DateTime
   session  Json
 }
