@@ -16,8 +16,8 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
 
     const handleAuth = async () => {
         const endpoint = isRegistering
-            ? "http://localhost:8080/auth/register"
-            : "http://localhost:8080/auth/login";
+            ? "https://normal-heroic-wren.ngrok-free.app/auth/register"
+            : "https://normal-heroic-wren.ngrok-free.app/auth/login";
 
         try {
             const response = await fetch(endpoint, {
@@ -153,12 +153,11 @@ export default function BullOrBust() {
                     <h1 className="text-2xl font-bold">NBC BB Markets</h1>
                 </div>
                 <div className="flex items-center gap-2">
-                    <a href="/leaderboard"><span className="mr-3 hover:underline underline-offset-8">🏆&nbsp;leaderboards</span></a>
-                    <span>👤&nbsp;{username}</span>
+                    <a href="/leaderboard"><span className="mr-3 hover:underline underline-offset-8">🏆&nbsp;Leaderboards</span></a>
+                    <span>👤&nbsp;Account: {username}</span>
                 </div>
             </header>
-            {/* Rest of the component remains the same */}
-            <motion.main className="p-3 grid grid-cols-3 gap-2 overflow-hidden">
+            <motion.main className="p-3 grid  grid-cols-1  md:grid-cols-3 gap-2 overflow-hidden">
                 <motion.div className="flex flex-col gap-4" variants={cardVariants}>
                     <Card className="flex flex-col p-0">
                         <CardHeader>
@@ -208,7 +207,7 @@ export default function BullOrBust() {
                         <CardHeader>
                             <CardTitle className="flex items-center">
                                 <span className="text-red-800">BB</span>loomberg Terminal News
-                                <span className="ml-2 w-4 h-4 rounded-full bg-lime-400"></span> {/* Small lime circle */}
+                                <span className="ml-4 w-3 h-3 rounded-full bg-lime-500 animate-ping"></span> {/* Small lime circle */}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1 overflow-auto">
@@ -235,7 +234,7 @@ export default function BullOrBust() {
                             <CardTitle>Stock Quote</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1">
-                            <StockQuote />
+                            <StockQuote username={username} />
                         </CardContent>
                     </Card>
                 </motion.div>

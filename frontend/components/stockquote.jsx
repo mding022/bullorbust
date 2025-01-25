@@ -1,4 +1,6 @@
-import { useState } from 'react';
+"use client";
+
+import { useState } from "react";
 import StockChart1 from './stream/quotes/gld';
 import StockChart2 from './stream/quotes/fishrs';
 import StockChart3 from './stream/quotes/crude';
@@ -6,9 +8,69 @@ import StockChart4 from './stream/quotes/houses';
 import StockChart5 from './stream/quotes/farmrs';
 import StockChart6 from './stream/quotes/mltry';
 
-export default function StockQuote() {
+export default function StockQuote({ username }) {
     const [quantity, setQuantity] = useState('');
     const [shares, setShares] = useState('');
+    const [popupMessage, setPopupMessage] = useState('');
+    const [popupVisible, setPopupVisible] = useState(false);
+
+    const handleBuy = async () => {
+        if (!quantity || !shares || !username) return;
+        
+        try {
+            const response = await fetch("https://normal-heroic-wren.ngrok-free.app/place-request", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true" 
+                },
+                body: JSON.stringify({
+                    symbol: shares,
+                    amount: quantity,
+                    username: username
+                }),
+            });
+
+            if (response.ok) {
+                setPopupMessage("Order placed successfully!");
+            } else {
+                setPopupMessage("Failed to place the order.");
+            }
+        } catch (error) {
+            setPopupMessage("Error occurred. Please try again.");
+        } finally {
+            setPopupVisible(true);
+        }
+    };
+
+    const handleSell = async () => {
+        if (!quantity || !shares || !username) return;
+        
+        try {
+            const response = await fetch("https://normal-heroic-wren.ngrok-free.app/place-request", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true"
+                },
+                body: JSON.stringify({
+                    symbol: shares,
+                    amount: quantity,
+                    username: username
+                }),
+            });
+
+            if (response.ok) {
+                setPopupMessage("Order placed successfully!");
+            } else {
+                setPopupMessage("Failed to place the order.");
+            }
+        } catch (error) {
+            setPopupMessage("Error occurred. Please try again.");
+        } finally {
+            setPopupVisible(true);
+        }
+    };
 
     return (
         <div className="p-4">
@@ -51,10 +113,16 @@ export default function StockQuote() {
                 </div>
             </div>
             <div className="flex items-center w-full">
-                <button className="bg-green-500 text-white px-12 py-2 mr-4 rounded hover:bg-green-600 transition">
+                <button
+                    className="bg-green-500 text-white px-12 py-2 mr-4 rounded hover:bg-green-600 transition"
+                    onClick={handleBuy}
+                >
                     Buy
                 </button>
-                <button className="bg-red-500 text-white px-12 py-2 mr-4 rounded hover:bg-red-600 transition">
+                <button
+                    className="bg-red-500 text-white px-12 py-2 mr-4 rounded hover:bg-red-600 transition"
+                    onClick={handleSell}
+                >
                     Sell
                 </button>
                 <input
@@ -73,6 +141,19 @@ export default function StockQuote() {
                     onChange={(e) => setShares(e.target.value)}
                 />
             </div>
+            {popupVisible && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-6 rounded shadow-lg">
+                        <p className="text-lg font-semibold">{popupMessage}</p>
+                        <button
+                            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                            onClick={() => setPopupVisible(false)}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

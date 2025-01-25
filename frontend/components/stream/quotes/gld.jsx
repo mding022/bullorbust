@@ -13,6 +13,7 @@ const Chart = () => {
             layout: {
                 textColor: "black",
                 background: { type: "solid", color: "white" },
+                attributionLogo: false
             },
             timeScale: {
                 timeVisible: true,
@@ -33,25 +34,25 @@ const Chart = () => {
         chart.timeScale().fitContent();
         chart.timeScale().scrollToPosition(5);
 
-        const fetchLiveData = (() => {
-            let lastTime = Math.floor(Date.now() / 1000);
-            let lastPrice = 100;
-
-            return () => {
-                const now = Math.floor(Date.now() / 1000);
-                const priceChange = (Math.random() - 0.5) * 2;
-                const newPrice = lastPrice + priceChange;
-                if (now > lastTime) {
-                    lastTime = now;
-                    series.update({ time: now, value: newPrice });
+        const fetchLiveData = async () => {
+            try {
+                const response = await fetch("https://normal-heroic-wren.ngrok-free.app/market/price/GLD", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    },
+                });
+                const data = await response.json();
+                if (data.price) {
+                    series.update({ time: Math.floor(Date.now() / 1000), value: data.price });
                 }
-                lastPrice = newPrice;
-            };
-        })();
+            } catch (error) {
+                console.error("Error fetching live data:", error);
+            }
+        };
 
-        const intervalID = setInterval(() => {
-            fetchLiveData();
-        }, 100);
+        const intervalID = setInterval(fetchLiveData, 500); // Fetch data every 2 seconds
 
         window.addEventListener("resize", () => {
             chart.applyOptions({ height: 100 });

@@ -13,6 +13,7 @@ const Chart = () => {
             layout: {
                 textColor: "black",
                 background: { type: "solid", color: "white" },
+attributionLogo: false
             },
             timeScale: {
                 timeVisible: true,
