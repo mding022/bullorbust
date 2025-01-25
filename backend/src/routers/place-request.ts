@@ -10,16 +10,12 @@ requestRouter.post("/", isAuthenticated, async (req, res) => {
     const { symbol, amount } = req.body;
     
     if (!symbol || !amount) {
-        return res.status(400).json({ error: "Missing required fields" });
-    }
-
-    const username = await req.user.username;
-    if (!username) {
-        return res.status(401).json({ error: "Invalid authentication" });
+        res.status(400).json({ error: "Missing required fields" });
+        return;
     }
 
     const user: User | null = await prisma.user.findUnique({
-        where: { username },
+        where: { id: req.user?.id },
     });
 
     const stock: Stock | null = await prisma.stock.findUnique({
@@ -27,44 +23,42 @@ requestRouter.post("/", isAuthenticated, async (req, res) => {
     });
 
     if (!user || !stock) {
-        return res.status(404).json({ error: "User or stock not found" });
+        res.status(404).json({ error: "User or stock not found" });
+        return;
     }
 
     const latestPrice = stock.price[stock.price.length - 1];
     const totalCost = latestPrice * amount;
 
     try {
-        // Buy logic
+        const holdings = (user.holding as any)?.data || [];
         await prisma.user.update({
-            where: { username },
+            where: { id: req.user?.id },
             data: {
-                balance: user.balance - totalCost,
+                balance: (user.balance || 0) - totalCost,
                 holding: {
-                    push: { stock: symbol, amount }
+                    data: [...holdings, { stock: symbol, amount }]
                 }
             }
         });
 
-        return res.status(200).json({ success: "Transaction successful" });
+        res.status(200).json({ success: "Transaction successful" });
     } catch (error) {
-        return res.status(400).json({ error: "Transaction failed" });
+        res.status(400).json({ error: "Transaction failed" });
     }
 });
 
-requestRouter.put("/", async (req, res) => {
+requestRouter.put("/", isAuthenticated, async (req, res) => {
     const { symbol, amount } = req.body;
     
     if (!symbol || !amount) {
-        return res.status(400).json({ error: "Missing required fields" });
+        res.status(400).json({ error: "Missing required fields" });
+        return;
     }
 
-    const username = await req.user.username;
-    if (!username) {
-        return res.status(401).json({ error: "Invalid authentication" });
-    }
 
     const user: User | null = await prisma.user.findUnique({
-        where: { username },
+        where: { id: req.user?.id },
     });
 
     const stock: Stock | null = await prisma.stock.findUnique({
@@ -72,35 +66,38 @@ requestRouter.put("/", async (req, res) => {
     });
 
     if (!user || !stock) {
-        return res.status(404).json({ error: "User or stock not found" });
+        res.status(404).json({ error: "User or stock not found" });
+        return;
     }
 
     const latestPrice = stock.price[stock.price.length - 1];
     const totalCost = latestPrice * amount;
 
-    const existingHolding = user.holding.find((h: any) => h.stock === symbol);
+    const holdings = (user.holding as any)?.data || [];
+    const existingHolding = holdings.find((h: any) => h.stock === symbol);
     if (!existingHolding || existingHolding.amount < amount) {
-        return res.status(400).json({ error: "Insufficient stocks" });
+        res.status(400).json({ error: "Insufficient stocks" });
+        return;
     }
 
     try {
-
         await prisma.user.update({
-            where: { username },
+            where: { id: req.user?.id },
             data: {
-                balance: user.balance + totalCost,
+                balance: (user.balance || 0) + totalCost,
                 holding: {
-                    updateMany: {
-                        where: { stock: symbol },
-                        data: { amount: existingHolding.amount - amount }
-                    }
+                    data: holdings.map((h: any) => 
+                        h.stock === symbol 
+                            ? { ...h, amount: h.amount - amount }
+                            : h
+                    )
                 }
             }
         });
 
-        return res.status(200).json({ success: "Transaction successful" });
+        res.status(200).json({ success: "Transaction successful" });
     } catch (error) {
-        return res.status(400).json({ error: "Transaction failed" });
+        res.status(400).json({ error: "Transaction failed" });
     }
 });
 
