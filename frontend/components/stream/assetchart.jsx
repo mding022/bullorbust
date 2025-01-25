@@ -31,7 +31,7 @@ const Chart = () => {
 
         series.setData([]);
         chart.timeScale().fitContent();
-        chart.timeScale().scrollToPosition(5);
+        chart.timeScale().scrollToPosition(5, true);
 
         const fetchLiveData = (() => {
             let lastTime = Math.floor(Date.now() / 1000);
