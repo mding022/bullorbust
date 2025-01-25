@@ -29,7 +29,7 @@ export default function Leaderboard() {
                 </div>
                 <div className="space-y-4">
                     <div>
-                        <h3 className="font-semibold">Top 10 Users</h3>
+                        <h3 className="font-semibold">Top 10 Asset Managers</h3>
                         <div className="space-y-2">
                             {topUsers.slice(0, 10).map((user, index) => (
                                 <div
