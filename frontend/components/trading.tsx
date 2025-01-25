@@ -135,7 +135,7 @@ export default function BullOrBust() {
                         <path d="M0 0h150v150H0V0z" fill="none" />
                         <path d="M90 44.8c-2.1.5-3.6.8-5.2.2-1.2-.7-2.2-1.8-2.9-3L67.6 22.5c-.7-1.2-1.8-2.3-3-3-1.5-.6-3.1-.2-5.2.2l-46 12.5v85.9l46.3-12.4c2.1-.5 3.7-.8 5.2-.3 1.2.7 2.2 1.7 2.9 2.9L82 128c.7 1.2 1.7 2.2 2.9 2.9 1.5.6 3.1.2 5.2-.3l46.2-12.3V32.4L90 44.8z" fill="#e21e26" />
                     </svg>
-                    <h1 className="text-2xl font-bold">NBC B/B Markets</h1>
+                    <h1 className="text-2xl font-bold">NBC BB Markets</h1>
                 </div>
                 <div className="flex items-center gap-2">
                     <a href="/leaderboard"><span className="mr-3 hover:underline underline-offset-8">🏆&nbsp;leaderboards</span></a>
@@ -150,7 +150,7 @@ export default function BullOrBust() {
                         </CardHeader>
                         <CardContent className="flex-1">
                             <p className="text-3xl font-bold">$100,000</p>
-                            <p className="text-sm text-muted-foreground pb-5">Profit/Loss: $0</p>
+                            <p className="text-base text-muted-foreground pb-5">Profit/Loss: $0.00</p>
                         </CardContent>
                         <CardHeader>
                             <CardTitle>Realtime Portfolio Value</CardTitle>
@@ -161,7 +161,7 @@ export default function BullOrBust() {
                         <CardHeader>
                             <CardTitle>Positions</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex-1 overflow-hidden">
+                        <CardContent className="flex-1 overflow-x-auto">
                             <ScrollArea className="h-full">
                                 <Table>
                                     <TableHeader>
