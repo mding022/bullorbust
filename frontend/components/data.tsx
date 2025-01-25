@@ -1,5 +1,5 @@
 export const fakeHoldings = [
-    { symbol: "GLDMNE", shares: 100, price: 150.25, value: 15025 },
+    { symbol: "GLD", shares: 100, price: 150.25, value: 15025 },
     { symbol: "FISHRS", shares: 200, price: 75.5, value: 15100 },
     { symbol: "CRUDE", shares: 50, price: 200.0, value: 10000 },
     { symbol: "HOUSES", shares: 75, price: 80.0, value: 6000 },
