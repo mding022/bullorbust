@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,40 +7,119 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { fakeHoldings, fakeNews } from "./data";
 import { motion } from "framer-motion";
 
-export default function BullOrBust() {
-    const [username, setUsername] = useState("default-user");
-    // const fetchUsername = async () => {
-    //     try {
-    //         const response = await fetch("http://localhost:8080/username");
-    //         if (response.ok) {
-    //             const data = await response.json();
-    //             setUsername(data.username);
-    //         }
-    //     } catch (error) {
-    //         console.error("Failed to fetch username:", error);
-    //     }
-    // };
+const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
-    // useEffect(() => {
-    //     fetchUsername();
-    // }, []);
+    const handleLogin = () => {
+        if (username && password) {
+            fetch("http://localhost:8080/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.userid && data.userid !== "-1") {
+                        onLogin(data.userid);
+                    } else {
+                        alert("Invalid login credentials");
+                    }
+                })
+                .catch(() => alert("Error logging in"));
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-background">
+            <div className="bg-white p-8 rounded shadow-lg w-96">
+                <div className="flex items-center gap-1.5 pb-5">
+                    <svg
+                        id="logosandtypes_com"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 150 150"
+                        className="h-7 w-7"
+                    >
+                        <path d="M0 0h150v150H0V0z" fill="none" />
+                        <path
+                            d="M90 44.8c-2.1.5-3.6.8-5.2.2-1.2-.7-2.2-1.8-2.9-3L67.6 22.5c-.7-1.2-1.8-2.3-3-3-1.5-.6-3.1-.2-5.2.2l-46 12.5v85.9l46.3-12.4c2.1-.5 3.7-.8 5.2-.3 1.2.7 2.2 1.7 2.9 2.9L82 128c.7 1.2 1.7 2.2 2.9 2.9 1.5.6 3.1.2 5.2-.3l46.2-12.3V32.4L90 44.8z"
+                            fill="#e21e26"
+                        />
+                    </svg>
+                    <h2 className="text-2xl font-semibold mb-0">Login</h2>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2">Username</label>
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full p-2 border rounded"
+                        placeholder="Enter username"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2">Password</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-2 border rounded"
+                        placeholder="Enter password"
+                    />
+                </div>
+                <button
+                    onClick={handleLogin}
+                    className="w-full p-2 bg-red-400 text-white rounded"
+                >
+                    Login
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default function BullOrBust() {
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [username, setUsername] = useState("default-user");
 
     const containerVariants = {
         hidden: { opacity: 0, y: 50 },
         show: {
             opacity: 1,
             y: 0,
-            transition: { staggerChildren: 0.3, delayChildren: 0.2 }
-        }
+            transition: { staggerChildren: 0.3, delayChildren: 0.2 },
+        },
     };
 
     const cardVariants = {
         hidden: { opacity: 0, y: 20, filter: "blur(10px)" },
-        show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6 } }
+        show: {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            transition: { duration: 0.6 },
+        },
     };
 
+    const handleLoginSuccess = (userId: string) => {
+        setLoggedIn(true);
+        setUsername(userId);
+    };
+
+    if (!loggedIn) {
+        return <LoginPage onLogin={handleLoginSuccess} />;
+    }
+
     return (
-        <div className="min-h-screen bg-background text-foreground flex flex-col">
+        <motion.div
+            className="min-h-screen bg-background text-foreground flex flex-col"
+            initial="hidden"
+            animate="show"
+            variants={containerVariants}
+        >
             <header className="flex justify-between items-center p-4 border-b">
                 <div className="flex items-center gap-2">
                     <svg
@@ -50,26 +129,16 @@ export default function BullOrBust() {
                         className="h-8 w-8"
                     >
                         <path d="M0 0h150v150H0V0z" fill="none" />
-                        <path
-                            d="M90 44.8c-2.1.5-3.6.8-5.2.2-1.2-.7-2.2-1.8-2.9-3L67.6 22.5c-.7-1.2-1.8-2.3-3-3-1.5-.6-3.1-.2-5.2.2l-46 12.5v85.9l46.3-12.4c2.1-.5 3.7-.8 5.2-.3 1.2.7 2.2 1.7 2.9 2.9L82 128c.7 1.2 1.7 2.2 2.9 2.9 1.5.6 3.1.2 5.2-.3l46.2-12.3V32.4L90 44.8z"
-                            fill="#e21e26"
-                        />
+                        <path d="M90 44.8c-2.1.5-3.6.8-5.2.2-1.2-.7-2.2-1.8-2.9-3L67.6 22.5c-.7-1.2-1.8-2.3-3-3-1.5-.6-3.1-.2-5.2.2l-46 12.5v85.9l46.3-12.4c2.1-.5 3.7-.8 5.2-.3 1.2.7 2.2 1.7 2.9 2.9L82 128c.7 1.2 1.7 2.2 2.9 2.9 1.5.6 3.1.2 5.2-.3l46.2-12.3V32.4L90 44.8z" fill="#e21e26" />
                     </svg>
-                    <h1 className="text-2xl font-bold">B/B Markets</h1>
+                    <h1 className="text-2xl font-bold">NBC B/B Markets</h1>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span role="img" aria-label="User icon">
-                        👤
-                    </span>
+                    <span role="img" aria-label="User icon">👤</span>
                     <span>{username}</span>
                 </div>
             </header>
-            <motion.main
-                className="flex-1 p-4 grid grid-cols-2 gap-4 overflow-hidden"
-                initial="hidden"
-                animate="show"
-                variants={containerVariants}
-            >
+            <motion.main className="flex-1 p-4 grid grid-cols-2 gap-4 overflow-hidden">
                 <motion.div className="flex flex-col gap-4" variants={cardVariants}>
                     <Card className="flex-1 flex flex-col">
                         <CardHeader>
@@ -130,18 +199,20 @@ export default function BullOrBust() {
                         <CardHeader>
                             <CardTitle>Stock Quote</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex-1 overflow-hidden">
-                            <ScrollArea className="h-full">
-                                <p className="text-sm text-muted-foreground">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies,
-                                    nunc nisl aliquet nunc, vitae aliquam nisl nunc vitae nisl. Sed vitae nisl eget nisl aliquam
-                                    ultricies.
-                                </p>
-                            </ScrollArea>
+                        <CardContent className="flex-1">
+                            <input
+                                type="text"
+                                placeholder="Enter symbol"
+                                className="w-full p-2 border rounded"
+                            />
+                            <div className="mt-2">
+                                <p className="text-2xl font-bold">Stock Price: $123.45</p>
+                                <p className="text-sm text-muted-foreground">24h Change: +1.5%</p>
+                            </div>
                         </CardContent>
                     </Card>
                 </motion.div>
             </motion.main>
-        </div>
+        </motion.div>
     );
 }
