@@ -14,7 +14,10 @@ leadRouter.get('/', async (req, res) => {
     const users = await prisma.user.findMany();
     const stocks = await prisma.stock.findMany();
     const leaderboard = users.map(user => {
-      const holdings = (user.holding as any)?.data || [];
+      const holdings: Holding[] = JSON.parse(
+
+        JSON.stringify(user.holding || [])
+      ) as Holding[];
       
       const totalBalance = holdings.reduce((total: number, holding: Holding) => {
         const stock = stocks.find(s => s.symbol === holding.stock);

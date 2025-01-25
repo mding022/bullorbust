@@ -16,6 +16,7 @@ declare global {
     }
   }
 }
+// import requestRouter from "./routers/place-request";
 
 dotenv.config();
 
@@ -53,7 +54,6 @@ app.use(helmet());
 
 
 // Routers
-app.use("/auth", authRouter);
 
 
 app.use('/ws', router);
@@ -61,6 +61,10 @@ app.use('/ws', router);
 
 app.use('/leaderboard', leadRouter);
 
+
+app.use("/auth", authRouter);
+
+// app.use('/place-request', requestRouter);
 
 // Session middleware
 app.use(async(req, res, next) => {
