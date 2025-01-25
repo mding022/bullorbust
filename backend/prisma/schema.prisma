@@ -30,7 +30,8 @@ model User {
   name      String
 //  holding   Stock    @relation(field: [tickers], references: [symbol])
 //  tickers   String[] @default([]) // cant work because this isnt a scalar
-  tickers   String[] @default[] // TODO: try to enforce this, if not to do so logically
+//  tickers   String[] @default[] // TODO: try to enforce this, if not to do so logically
+  holding   Json     // to have [{stock: Stock.symbol. ammount: int}, ... ,]
   userdata  Json 
 }
 

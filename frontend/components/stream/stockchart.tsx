@@ -24,9 +24,9 @@ const Chart = () => {
 
         const chart = createChart(chartContainerRef.current, chartOptions);
         const series = chart.addAreaSeries({
-            lineColor: "#d03732",
-            topColor: "rgba(288, 55, 50, 0.3)",
-            bottomColor: "rgba(288, 55, 50, 0)",
+            lineColor: "#1E3A8A",
+            topColor: "rgba(30, 58, 138, 0.3)",
+            bottomColor: "rgba(30, 58, 138, 0)"
         });
 
         series.setData([]);
@@ -64,7 +64,7 @@ const Chart = () => {
         };
     }, []);
 
-    return <div ref={chartContainerRef} className="w-full h-64" />;
+    return <div ref={chartContainerRef} className="w-full h-80" />;
 };
 
 export default Chart;
