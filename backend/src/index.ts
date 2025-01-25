@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import expressWs from 'express-ws';
+import { authRouter } from "./routers/auth";
 
 dotenv.config();
 
@@ -26,12 +27,18 @@ router.ws('/echo', (ws, req) => {
   });
 });
 
+
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("OK");
 });
 
+
+// Routers
+app.use("/auth", authRouter);
+
+
+app.use('/ws', router);
+
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
-
-app.use('/ws', router);
