@@ -7,9 +7,9 @@ export const authRouter = Router();
 
 // TODO: This needs to be a WebSocket.
 authRouter.get("/user-data", async (req, res) => {
-    const { id } = req.query;
-
-    if (!id) {
+    const id = req.query.id as string;
+    
+    if (!id || typeof id !== "string") {
         res.status(400).json({ error: "Missing id" });
         return;
     }
