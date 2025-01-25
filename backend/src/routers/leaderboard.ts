@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { PrismaClient, User, Stock } from '@prisma/client';
 import prisma from '../lib/db';
+import { isAuthenticated } from '../lib/isAuthenticated';
 
 const leadRouter = Router();
 
@@ -9,15 +10,12 @@ interface Holding { //To be used in representing the User.holding objects
   amount: number; // Quantity of stock held
 }
 
-leadRouter.get('/', async (req, res) => {
+leadRouter.get('/', isAuthenticated, async (req, res) => {
   try {
     const users = await prisma.user.findMany();
     const stocks = await prisma.stock.findMany();
     const leaderboard = users.map(user => {
-      const holdings: Holding[] = JSON.parse(
-
-        JSON.stringify(user.holding || [])
-      ) as Holding[];
+      const holdings = ((user.holding as any)?.data || []) as Holding[];
       
       const totalBalance = holdings.reduce((total: number, holding: Holding) => {
         const stock = stocks.find(s => s.symbol === holding.stock);

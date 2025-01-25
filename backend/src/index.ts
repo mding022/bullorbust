@@ -52,20 +52,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
 
-
-// Routers
-
-
-app.use('/ws', router);
-
-
-app.use('/leaderboard', leadRouter);
-
-
-app.use("/auth", authRouter);
-
-// app.use('/place-request', requestRouter);
-
 // Session middleware
 app.use(async(req, res, next) => {
   const session = req.cookies.session;
@@ -77,6 +63,13 @@ app.use(async(req, res, next) => {
   }
   next();
 });
+
+// Routers
+app.use("/auth", authRouter);
+app.use('/ws', router);
+app.use('/leaderboard', leadRouter);
+
+// app.use('/place-request', requestRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

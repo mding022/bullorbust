@@ -77,7 +77,13 @@ authRouter.post("/login", async (req, res) => {
         },
     });
 
-    res.cookie("session", session.id, { httpOnly: true, secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+    res.cookie("session", session.id, { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'strict',
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        path: '/'
+    });
     res.status(200).json({ userId: user.id });
 });
 
@@ -150,6 +156,12 @@ authRouter.post("/register", async (req, res) => {
         },
     });
 
-    res.cookie("session", session.id, { httpOnly: true, secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+    res.cookie("session", session.id, { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'strict',
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        path: '/'
+    });
     res.status(200).json({ userId: user.id });
 });
