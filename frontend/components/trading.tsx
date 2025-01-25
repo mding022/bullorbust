@@ -6,8 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { fakeHoldings, fakeNews } from "./data";
 import { motion } from "framer-motion";
-import StockChart from './stream/stockchart'
 import AssetChart from './stream/assetchart'
+import StockQuote from "./stockquote";
 
 const LoginPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
     const [username, setUsername] = useState("");
@@ -200,7 +200,7 @@ export default function BullOrBust() {
                                         <p className="text-base text-muted-foreground">{fakeNews[0].content}</p>
                                     </div>
                                 )}
-                                <div className="mt-4 space-y-2 overflow-y-auto h-36">
+                                <div className="mt-4 space-y-2 overflow-y-auto h-40">
                                     {fakeNews.slice(1).map((article, index) => (
                                         <div key={index} className="text-xs opacity-70">
                                             <h3 className="font-semibold">{article.title}<span className="italic text-muted-foreground ml-2">{article.time}</span></h3>
@@ -216,38 +216,7 @@ export default function BullOrBust() {
                             <CardTitle>Stock Quote</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1">
-                            <input
-                                type="text"
-                                placeholder="Enter symbol"
-                                className="w-full p-2 border rounded"
-                                autoFocus
-                            />
-                            <div className="mt-2">
-                                <p className="text-2xl font-bold">Stock Price: $123.45</p>
-                                <p className="text-sm text-muted-foreground">24h Change: +1.5%</p>
-                                <StockChart />
-                            </div>
-                            <div className="mt-4 flex items-center space-x-2 w-full mb-5">
-                                <input
-                                    type="number"
-                                    placeholder="Quantity"
-                                    className="flex-grow p-2 border rounded"
-                                />
-                                <div className="flex space-x-2">
-                                    <a
-                                        href="#"
-                                        className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition"
-                                    >
-                                        Buy
-                                    </a>
-                                    <a
-                                        href="#"
-                                        className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
-                                    >
-                                        Sell
-                                    </a>
-                                </div>
-                            </div>
+                            <StockQuote />
                         </CardContent>
                     </Card>
                 </motion.div>
