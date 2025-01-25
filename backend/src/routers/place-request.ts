@@ -6,16 +6,16 @@ import {isAuthenticated } from "../lib/isAuthenticated";
 
 const requestRouter = Router();
 
-requestRouter.post("/", isAuthenticated, async (req, res) => {
-    const { symbol, amount } = req.body;
+requestRouter.post("/", async (req, res) => {
+    const { symbol, amount, username } = req.body;
     
-    if (!symbol || !amount) {
+    if (!symbol || !amount || !username) {
         res.status(400).json({ error: "Missing required fields" });
         return;
     }
 
     const user: User | null = await prisma.user.findUnique({
-        where: { id: req.user?.id },
+        where: { username },
     });
 
     const stock: Stock | null = await prisma.stock.findUnique({
@@ -33,7 +33,7 @@ requestRouter.post("/", isAuthenticated, async (req, res) => {
     try {
         const holdings = (user.holding as any)?.data || [];
         await prisma.user.update({
-            where: { id: req.user?.id },
+            where: { username },
             data: {
                 balance: (user.balance || 0) - totalCost,
                 holding: {
@@ -44,12 +44,13 @@ requestRouter.post("/", isAuthenticated, async (req, res) => {
 
         res.status(200).json({ success: "Transaction successful" });
     } catch (error) {
+        console.error(error);
         res.status(400).json({ error: "Transaction failed" });
     }
 });
 
-requestRouter.put("/", isAuthenticated, async (req, res) => {
-    const { symbol, amount } = req.body;
+requestRouter.put("/", async (req, res) => {
+    const { symbol, amount, username } = req.body;
     
     if (!symbol || !amount) {
         res.status(400).json({ error: "Missing required fields" });
@@ -58,7 +59,7 @@ requestRouter.put("/", isAuthenticated, async (req, res) => {
 
 
     const user: User | null = await prisma.user.findUnique({
-        where: { id: req.user?.id },
+        where: { username },
     });
 
     const stock: Stock | null = await prisma.stock.findUnique({
@@ -82,7 +83,7 @@ requestRouter.put("/", isAuthenticated, async (req, res) => {
 
     try {
         await prisma.user.update({
-            where: { id: req.user?.id },
+            where: { username },
             data: {
                 balance: (user.balance || 0) + totalCost,
                 holding: {
