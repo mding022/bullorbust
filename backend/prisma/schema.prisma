@@ -31,8 +31,8 @@ model User {
   //  tickers   String[] @default([]) // cant work because this isnt a scalar
   //  tickers   String[] @default[] // TODO: try to enforce this, if not to do so logically
   holding  Json // to have [{stock: Stock.symbol. ammount: int}, ... ,]
-  balance  Int //actual balance user has for buying shares / when selling shares
-  userdata Json
+  balance  Int? @default(0) //actual balance user has for buying shares / when selling shares
+  session  Session[]
 }
 
 model News {
@@ -40,4 +40,12 @@ model News {
   title   String
   desc    String
   tickers Json // middlewear to enforce json {symbol: str, effect: int}
+}
+
+model Session {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String @unique @db.ObjectId
+  user     User   @relation(fields: [userId], references: [id])
+  expires  DateTime
+  session  Json
 }

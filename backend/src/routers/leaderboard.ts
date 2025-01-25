@@ -1,12 +1,8 @@
 import { Router } from 'express';
 import { PrismaClient, User, Stock } from '@prisma/client';
+import prisma from '../lib/db';
 
 const leadRouter = Router();
-const prisma = new PrismaClient();
-
-interface Holdings {
-  data: Holding[];
-}
 
 interface Holding { //To be used in representing the User.holding objects
   stock: string; // Stock symbol
@@ -26,7 +22,7 @@ leadRouter.get('/', async (req, res) => {
           total += stock.price[stock.price.length - 1] * holding.amount;
         }
         return total;
-      }, 0);
+      }, 0) + (user.balance || 0);
       
       return {
         username: user.username,
@@ -35,7 +31,7 @@ leadRouter.get('/', async (req, res) => {
     });
     
     leaderboard.sort((a, b) => b.totalBalance - a.totalBalance);
-    res.json({ leaderboard });
+    res.status(200).json({ leaderboard });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
