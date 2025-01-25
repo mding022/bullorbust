@@ -16,8 +16,8 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
 
     const handleAuth = async () => {
         const endpoint = isRegistering
-            ? "http://localhost:8080/auth/register"
-            : "http://localhost:8080/auth/login";
+            ? "https://normal-heroic-wren.ngrok-free.app/auth/register"
+            : "https://normal-heroic-wren.ngrok-free.app/auth/login";
 
         try {
             const response = await fetch(endpoint, {
@@ -235,7 +235,7 @@ export default function BullOrBust() {
                             <CardTitle>Stock Quote</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1">
-                            <StockQuote />
+                            <StockQuote username={username} />
                         </CardContent>
                     </Card>
                 </motion.div>

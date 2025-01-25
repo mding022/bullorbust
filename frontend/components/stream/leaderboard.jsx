@@ -4,25 +4,39 @@ import { useEffect, useState } from "react";
 
 export default function Leaderboard() {
     const [topUsers, setTopUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const handleAuth = async () => {
             try {
-                const response = await fetch("http://localhost:8080/leaderboard", {
+                const response = await fetch("https://normal-heroic-wren.ngrok-free.app/leaderboard", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
                     },
-                    credentials: 'include'
                 });
                 const data = await response.json();
-                console.log(data)
+
+                if (data.leaderboard && Array.isArray(data.leaderboard)) {
+                    setTopUsers(data.leaderboard.slice(0, 10));
+                }
             } catch(error) { 
-                console.log(error)
+                console.log(error);
+            } finally {
+                setLoading(false);
             }
         };
         handleAuth();
     }, []);
+
+    if (loading) {
+        return (
+            <div className="w-full flex items-center justify-center h-screen bg-gray-100 animate-fade-in">
+                <div className="text-lg font-semibold">Loading leaderboard...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full flex items-center justify-center h-screen bg-gray-100">
@@ -60,7 +74,7 @@ export default function Leaderboard() {
                                     }}
                                 >
                                     <span className="font-medium">{index + 1}. {user.username}</span>
-                                    {/* <span>{user.totalBalance.toLocaleString()}</span> */}
+                                    <span>{user.totalBalance.toLocaleString()}</span>
                                 </div>
                             ))}
                         </div>
