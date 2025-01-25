@@ -157,12 +157,7 @@ export default function BullOrBust() {
                     <span>👤&nbsp;Account: {username}</span>
                 </div>
             </header>
-<<<<<<< HEAD
-            <motion.main className="p-4 grid  grid-cols-1  md:grid-cols-3 gap-4 overflow-hidden">
-=======
-            {/* Rest of the component remains the same */}
-            <motion.main className="p-3 grid grid-cols-3 gap-2 overflow-hidden">
->>>>>>> d729b045c588161cfc0674d4ad4479f57ee32696
+            <motion.main className="p-3 grid  grid-cols-1  md:grid-cols-3 gap-2 overflow-hidden">
                 <motion.div className="flex flex-col gap-4" variants={cardVariants}>
                     <Card className="flex flex-col p-0">
                         <CardHeader>
