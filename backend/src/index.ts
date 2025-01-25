@@ -8,6 +8,7 @@ import helmet from "helmet";
 import prisma from "./lib/db";
 import { Session } from "@prisma/client";
 import cookieParser from 'cookie-parser';
+import wsRouter from "./routers/ws";
 
 declare global {
   namespace Express {
@@ -16,33 +17,16 @@ declare global {
     }
   }
 }
-// import requestRouter from "./routers/place-request";
+import requestRouter from "./routers/place-request";
 
 dotenv.config();
 
 const { app, getWss, applyTo } = expressWs(express());
 const port = process.env.PORT || 3000;
 
-const router = express.Router() as expressWs.Router;
-
-router.ws('/echo', (ws, req) => {
-  ws.on('message', (msg: String) => {
-      ws.send(msg);
-  });
-
-  console.log('Connection opened');
-  ws.send('Hello World!');
-
-  setInterval(() => {
-    ws.send('Hello World!');
-  }, 1000);
-
-  ws.on('close', () => {
-    console.log('Connection closed');
-  });
-});
 
 
+// index api response
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("OK");
 });
@@ -66,10 +50,10 @@ app.use(async(req, res, next) => {
 
 // Routers
 app.use("/auth", authRouter);
-app.use('/ws', router);
+app.use('/ws', wsRouter);
 app.use('/leaderboard', leadRouter);
 
-// app.use('/place-request', requestRouter);
+app.use('/place-request', requestRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
