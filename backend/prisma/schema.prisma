@@ -32,7 +32,6 @@ model User {
   //  tickers   String[] @default[] // TODO: try to enforce this, if not to do so logically
   holding  Json // to have [{stock: Stock.symbol. ammount: int}, ... ,]
   balance  Int //actual balance user has for buying shares / when selling shares
-  userdata Json
 }
 
 model News {

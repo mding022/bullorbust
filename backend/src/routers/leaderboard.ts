@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PrismaClient, User, Stock } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 const leadRouter = Router();
 const prisma = new PrismaClient();
@@ -15,6 +15,7 @@ leadRouter.get('/', async (req, res) => {
     const stocks = await prisma.stock.findMany();
     const leaderboard = users.map(user => {
       const holdings: Holding[] = JSON.parse(
+
         JSON.stringify(user.holding || [])
       ) as Holding[];
       

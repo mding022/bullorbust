@@ -4,6 +4,7 @@ import expressWs from 'express-ws';
 import { authRouter } from "./routers/auth";
 import { startOutputParser } from "./chain/market";
 import leadRouter from "./routers/leaderboard";
+import requestRouter from "./routers/place-request";
 
 dotenv.config();
 
@@ -36,7 +37,6 @@ app.get("/", (req: Request, res: Response) => {
 
 
 // Routers
-app.use("/auth", authRouter);
 
 
 app.use('/ws', router);
@@ -44,6 +44,10 @@ app.use('/ws', router);
 
 app.use('/leaderboard', leadRouter);
 
+
+app.use(express.json());
+app.use("/auth", authRouter);
+app.use('/place-request', requestRouter);
 
 
 app.listen(port, () => {
