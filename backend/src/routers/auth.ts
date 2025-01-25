@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 
 export const authRouter = Router();
 
+
+// TODO: This needs to be a WebSocket.
 authRouter.get("/user-data", async (req, res) => {
     const { id } = req.query;
 
