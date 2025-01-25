@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import StockChart from './stream/stockchart'
 import AssetChart from './stream/assetchart'
 
-const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
+const LoginPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -137,7 +137,7 @@ export default function BullOrBust() {
                     <h1 className="text-2xl font-bold">NBC B/B Markets</h1>
                 </div>
                 <div className="flex items-center gap-2">
-                    <a href="#"><span className="mr-3 hover:underline underline-offset-8">🏆&nbsp;leaderboards</span></a>
+                    <a href="/leaderboard"><span className="mr-3 hover:underline underline-offset-8">🏆&nbsp;leaderboards</span></a>
                     <span>👤&nbsp;{username}</span>
                 </div>
             </header>

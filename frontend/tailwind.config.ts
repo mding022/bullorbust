@@ -9,6 +9,26 @@ export default {
   ],
   theme: {
   	extend: {
+		keyframes: {
+			'stagger-fade-in': {
+			  '0%': { 
+				opacity: '0', 
+				transform: 'translateY(50px) blur(10px)' 
+			  },
+			  '100%': { 
+				opacity: '1', 
+				transform: 'translateY(0) blur(0)' 
+			  }
+			},
+			'fade-in': {
+			  '0%': { opacity: '0' },
+			  '100%': { opacity: '1' }
+			}
+		  },
+		  animation: {
+			'stagger-fade-in': 'stagger-fade-in 0.5s ease-out forwards',
+			'fade-in': 'fade-in 0.5s ease-out forwards'
+		  },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
