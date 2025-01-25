@@ -6,7 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { fakeHoldings, fakeNews } from "./data";
 import { motion } from "framer-motion";
-import Chart from './stream/chart'
+import StockChart from './stream/stockchart'
+import AssetChart from './stream/assetchart'
 
 const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
     const [username, setUsername] = useState("");
@@ -140,16 +141,20 @@ export default function BullOrBust() {
                     <span>{username}</span>
                 </div>
             </header>
-            <motion.main className="flex-1 p-4 grid grid-cols-2 gap-4 overflow-hidden">
+            <motion.main className="p-4 grid grid-cols-2 gap-4 overflow-hidden">
                 <motion.div className="flex flex-col gap-4" variants={cardVariants}>
-                    <Card className="flex-1 flex flex-col">
+                    <Card className="flex flex-col p-0">
                         <CardHeader>
                             <CardTitle>Total Assets</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1">
                             <p className="text-3xl font-bold">$100,000</p>
-                            <p className="text-sm text-muted-foreground">Profit/Loss: $0</p>
+                            <p className="text-sm text-muted-foreground pb-5">Profit/Loss: $0</p>
                         </CardContent>
+                        <CardHeader>
+                            <CardTitle>Total Assets</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex-1"><AssetChart /></CardContent>
                     </Card>
                     <Card className="flex-1 flex flex-col">
                         <CardHeader>
@@ -220,7 +225,7 @@ export default function BullOrBust() {
                             <div className="mt-2">
                                 <p className="text-2xl font-bold">Stock Price: $123.45</p>
                                 <p className="text-sm text-muted-foreground">24h Change: +1.5%</p>
-                                < Chart />
+                                < StockChart />
                             </div>
                         </CardContent>
                     </Card>
