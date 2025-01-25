@@ -153,8 +153,8 @@ export default function BullOrBust() {
                     <h1 className="text-2xl font-bold">NBC BB Markets</h1>
                 </div>
                 <div className="flex items-center gap-2">
-                    <a href="/leaderboard"><span className="mr-3 hover:underline underline-offset-8">🏆&nbsp;leaderboards</span></a>
-                    <span>👤&nbsp;{username}</span>
+                    <a href="/leaderboard"><span className="mr-3 hover:underline underline-offset-8">🏆&nbsp;Leaderboards</span></a>
+                    <span>👤&nbsp;Account: {username}</span>
                 </div>
             </header>
             {/* Rest of the component remains the same */}
@@ -208,7 +208,7 @@ export default function BullOrBust() {
                         <CardHeader>
                             <CardTitle className="flex items-center">
                                 <span className="text-red-800">BB</span>loomberg Terminal News
-                                <span className="ml-2 w-4 h-4 rounded-full bg-lime-400"></span> {/* Small lime circle */}
+                                <span className="ml-4 w-3 h-3 rounded-full bg-lime-500 animate-ping"></span> {/* Small lime circle */}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1 overflow-auto">

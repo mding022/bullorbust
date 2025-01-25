@@ -51,6 +51,7 @@ export default function StockQuote({ username }) {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true"
                 },
                 body: JSON.stringify({
                     symbol: shares,
