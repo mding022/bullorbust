@@ -7,16 +7,16 @@ export const authRouter = Router();
 
 // TODO: This needs to be a WebSocket.
 authRouter.get("/user-data", async (req, res) => {
-    const id = req.query.id as string;
-    
-    if (!id || typeof id !== "string") {
+    const id = req.query.id as string | undefined;
+
+    if (!id) {
         res.status(400).json({ error: "Missing id" });
         return;
     }
     
     const user = await prisma.user.findUnique({
         where: {
-            id: id,
+            id: id, //ERROR is here
         },
         select: {
             id: true,

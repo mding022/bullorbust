@@ -195,16 +195,14 @@ export default function BullOrBust() {
                             <ScrollArea className="h-full">
                                 {fakeNews.length > 0 && (
                                     <div className="mb-4">
-                                        {/* Highlight most recent news */}
                                         <h2 className="text-xl font-bold">{fakeNews[0].title}</h2>
                                         <p className="text-base text-muted-foreground">{fakeNews[0].content}</p>
                                     </div>
                                 )}
-                                <div className="mt-4 space-y-2">
-                                    {/* Display other news smaller */}
+                                <div className="mt-4 space-y-2 overflow-y-auto h-36">
                                     {fakeNews.slice(1).map((article, index) => (
                                         <div key={index} className="text-xs opacity-70">
-                                            <h3 className="font-semibold">{article.title}</h3>
+                                            <h3 className="font-semibold">{article.title}<span className="italic text-muted-foreground ml-2">{article.time}</span></h3>
                                             <p className="text-muted-foreground">{article.content}</p>
                                         </div>
                                     ))}

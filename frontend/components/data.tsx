@@ -8,21 +8,37 @@ export const fakeHoldings = [
 
 export const fakeNews = [
     {
+        time: "9:02",
         title: "Market Update: Stocks Rally on Economic Data",
         content:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
+        time: "9:02",
         title: "Tech Sector Sees Boost from New Product Launches",
         content:
             "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     },
     {
+        time: "9:02",
         title: "Global Markets React to Policy Changes",
         content:
             "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
     },
     {
+        time: "9:02",
+        title: "Earnings Season: What to Expect",
+        content:
+            "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    },
+    {
+        time: "9:02",
+        title: "Earnings Season: What to Expect",
+        content:
+            "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    },
+    {
+        time: "9:02",
         title: "Earnings Season: What to Expect",
         content:
             "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
