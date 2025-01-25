@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { fakeHoldings, fakeNews } from "./data";
+import { motion } from "framer-motion";
 
 export default function BullOrBust() {
     const [username, setUsername] = useState("default-user");
@@ -23,6 +24,20 @@ export default function BullOrBust() {
     // useEffect(() => {
     //     fetchUsername();
     // }, []);
+
+    const containerVariants = {
+        hidden: { opacity: 0, y: 50 },
+        show: {
+            opacity: 1,
+            y: 0,
+            transition: { staggerChildren: 0.3, delayChildren: 0.2 }
+        }
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 20, filter: "blur(10px)" },
+        show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6 } }
+    };
 
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -49,8 +64,13 @@ export default function BullOrBust() {
                     <span>{username}</span>
                 </div>
             </header>
-            <main className="flex-1 p-4 grid grid-cols-2 gap-4 overflow-hidden">
-                <div className="flex flex-col gap-4">
+            <motion.main
+                className="flex-1 p-4 grid grid-cols-2 gap-4 overflow-hidden"
+                initial="hidden"
+                animate="show"
+                variants={containerVariants}
+            >
+                <motion.div className="flex flex-col gap-4" variants={cardVariants}>
                     <Card className="flex-1 flex flex-col">
                         <CardHeader>
                             <CardTitle>Total Assets</CardTitle>
@@ -89,8 +109,8 @@ export default function BullOrBust() {
                             </ScrollArea>
                         </CardContent>
                     </Card>
-                </div>
-                <div className="flex flex-col gap-4">
+                </motion.div>
+                <motion.div className="flex flex-col gap-4" variants={cardVariants}>
                     <Card className="flex-1 flex flex-col h-1/3">
                         <CardHeader>
                             <CardTitle>News</CardTitle>
@@ -120,8 +140,8 @@ export default function BullOrBust() {
                             </ScrollArea>
                         </CardContent>
                     </Card>
-                </div>
-            </main>
+                </motion.div>
+            </motion.main>
         </div>
     );
 }
