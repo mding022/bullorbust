@@ -19,7 +19,7 @@ public class StockService {
     public void updateStockPrices() {
         for (int i = 0; i < prices.length; i++) {
             double changeFactor = random.nextDouble();
-            double changeAmount = (changeFactor < 0.3 ? -random.nextDouble() * 3 : random.nextDouble() * 2);
+            double changeAmount = (changeFactor < 0.3 ? -random.nextDouble() * 3 : random.nextDouble() * 1.29);
             prices[i] = Math.max(0, Math.round((prices[i] + changeAmount) * 100.0) / 100.0); // Ensures non-negative prices
         }
     }
