@@ -52,7 +52,7 @@ attributionLogo: false
 
         const intervalID = setInterval(() => {
             fetchLiveData();
-        }, 100);
+        }, 500);
 
         window.addEventListener("resize", () => {
             chart.applyOptions({ height: 200 });
