@@ -63,7 +63,7 @@ public class MainController {
                         + stocks[ticker] + ". Only return the headline and nothing else as a string.";
                 break;
             case 3:
-                prompt = "Tone: Negative, factual, and credible. Structure: The headline reports on real negative events, such as lawsuits, financial loss, scandals, or product failures, with credible sources or verified information. It gives a clear signal that the stock is likely to decline based on unfavorable developments. Also could be about natural disasters or freak accidents. Keywords: Lawsuit, loss, bankruptcy, fraud, recall, scandal, termination, investigation, fines, failure, collapse. Following those steps, write a one to two sentence sample headline of the company  Following those steps, write a one to two sentence sample headline of the company "
+                prompt = "Tone: Negative, factual, and credible. Structure: The headline reports on real negative events, such as lawsuits, financial loss, scandals, or product failures, with credible sources or verified information. It gives a clear signal that the stock is likely to decline based on unfavorable developments. Also could be about natural disasters or freak accidents. Please be creative and don;t always use class-action lawsuits. Keywords: Lawsuit, loss, bankruptcy, fraud, recall, scandal, termination, investigation, fines, failure, collapse. Following those steps, write a one to two sentence sample headline of the company  Following those steps, write a one to two sentence sample headline of the company "
                         + stocks[ticker] + ". Only return the headline and nothing else as a string.";
                 break;
         }
