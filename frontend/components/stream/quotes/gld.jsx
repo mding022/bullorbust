@@ -56,7 +56,7 @@ const Chart = () => {
             }
         };
 
-        const intervalID = setInterval(fetchLiveData, 2000); // Fetch data every 2 seconds
+        const intervalID = setInterval(fetchLiveData, 100); // Fetch data every 2 seconds
 
         window.addEventListener("resize", () => {
             chart.applyOptions({ height: 100 });
