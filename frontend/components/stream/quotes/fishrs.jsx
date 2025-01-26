@@ -34,21 +34,27 @@ attributionLogo: false
         chart.timeScale().fitContent();
         chart.timeScale().scrollToPosition(5);
 
-        const fetchLiveData = (() => {
-            let lastTime = Math.floor(Date.now() / 1000);
-            let lastPrice = 100;
+        const fetchLiveData = async () => {
+            try {
+                const response = await fetch("http://localhost:8080/api/stock?ticker=FISHRS", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
 
-            return () => {
-                const now = Math.floor(Date.now() / 1000);
-                const priceChange = (Math.random() - 0.5) * 2;
-                const newPrice = lastPrice + priceChange;
-                if (now > lastTime) {
-                    lastTime = now;
-                    series.update({ time: now, value: newPrice });
+                const price = await response.json();
+
+                if (typeof price === 'number') {
+                    series.update({
+                        time: Math.floor(Date.now() / 1000),
+                        value: price,
+                    });
                 }
-                lastPrice = newPrice;
-            };
-        })();
+            } catch (error) {
+                console.error("Error fetching live data:", error);
+            }
+        };
 
         const intervalID = setInterval(() => {
             fetchLiveData();
