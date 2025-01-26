@@ -36,23 +36,27 @@ const Chart = () => {
 
         const fetchLiveData = async () => {
             try {
-                const response = await fetch("https://normal-heroic-wren.ngrok-free.app/market/price/GLD", {
+                const response = await fetch("http://localhost:8080/api/stock?ticker=GLD", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        "ngrok-skip-browser-warning": "true"
                     },
                 });
-                const data = await response.json();
-                if (data.price) {
-                    series.update({ time: Math.floor(Date.now() / 1000), value: data.price });
+
+                const price = await response.json();
+
+                if (typeof price === 'number') {
+                    series.update({
+                        time: Math.floor(Date.now() / 1000),
+                        value: price,
+                    });
                 }
             } catch (error) {
                 console.error("Error fetching live data:", error);
             }
         };
 
-        const intervalID = setInterval(fetchLiveData, 500); // Fetch data every 2 seconds
+        const intervalID = setInterval(fetchLiveData, 2000); // Fetch data every 2 seconds
 
         window.addEventListener("resize", () => {
             chart.applyOptions({ height: 100 });

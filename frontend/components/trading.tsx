@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { fakeHoldings, fakeNews } from "./data";
+import { fakeHoldings, useNews } from "./data";
 import { motion } from "framer-motion";
 import AssetChart from './stream/assetchart'
 import StockQuote from "./stockquote";
@@ -16,8 +16,8 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
 
     const handleAuth = async () => {
         const endpoint = isRegistering
-            ? "https://normal-heroic-wren.ngrok-free.app/auth/register"
-            : "https://normal-heroic-wren.ngrok-free.app/auth/login";
+            ? "https://bullorbust.matiass.ca/auth/register"
+            : "https://bullorbust.matiass.ca/auth/login";
 
         try {
             const response = await fetch(endpoint, {
@@ -102,6 +102,7 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
 export default function BullOrBust() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
+    const news = useNews();
 
     const containerVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -212,16 +213,19 @@ export default function BullOrBust() {
                         </CardHeader>
                         <CardContent className="flex-1 overflow-auto">
                             <ScrollArea className="h-full">
-                                {fakeNews.length > 0 && (
+                                {news.length > 0 && (
                                     <div className="mb-4">
-                                        <h2 className="text-xl font-bold">{fakeNews[0].title}</h2>
-                                        <p className="text-base text-muted-foreground">{fakeNews[0].content}</p>
+                                        <h2 className="text-xl font-bold">{news[0].title}</h2>
+                                        <p className="text-base text-muted-foreground">{news[0].content}</p>
                                     </div>
-                                )}
-                                <div className="mt-4 space-y-2 overflow-y-auto h-40">
-                                    {fakeNews.slice(1).map((article, index) => (
+                                )} 
+                                <div className="overflow-y-auto h-36">
+                                    {news.slice(1).map((article, index) => (
                                         <div key={index} className="text-xs opacity-70">
-                                            <h3 className="font-semibold">{article.title}<span className="italic text-muted-foreground ml-2">{article.time}</span></h3>
+                                            <h3 className="font-semibold">
+                                                {article.title}
+                                                <span className="italic text-muted-foreground ml-2">{article.time}</span>
+                                            </h3>
                                             <p className="text-muted-foreground">{article.content}</p>
                                         </div>
                                     ))}
