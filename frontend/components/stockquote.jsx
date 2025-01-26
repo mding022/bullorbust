@@ -74,7 +74,7 @@ export default function StockQuote({ username }) {
 
     return (
         <div className="p-4">
-            <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
                 <div className="p-2 border rounded shadow bg-white">
                     <p className="text-sm font-semibold text-center">GLD<span className="font-normal text-gray-400 ml-2">The Gold Mining Co. Canada</span></p>
                     <div className="h-full mt-1">

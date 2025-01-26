@@ -15,6 +15,8 @@ import requestRouter from "./routers/place-request";
 import { z } from "zod";
 import { StructuredOutputParser } from "langchain/output_parsers";
 import proxy from 'express-http-proxy';
+import balanceRouter from "./routers/balance";
+import assetsRouter from "./routers/assets";
 
 declare global {
   namespace Express {
@@ -239,10 +241,27 @@ marketRouter.get('/value/:username', async (req, res) => {
     }
 });
 
+app.use('/balance', balanceRouter);
+app.use('/assets', assetsRouter);
 
 // Proxy the spring bean
 // proxy /bean/* to the spring boot app at localhost:8083
-app.use('/bean', proxy('http://localhost:8083'));
+app.use('/bean', proxy('http://localhost:8083', {
+  proxyReqOptDecorator: function(proxyReqOpts) {
+    proxyReqOpts.headers = {
+      ...proxyReqOpts.headers,
+      'Origin': 'http://localhost:3000'
+    };
+    return proxyReqOpts;
+  },
+  userResHeaderDecorator: function(headers) {
+    headers['Access-Control-Allow-Origin'] = '*';
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+    headers['Access-Control-Allow-Headers'] = '*';
+    headers['Access-Control-Allow-Credentials'] = 'true';
+    return headers;
+  }
+}));
 
 // Add the market router to the main app
 app.use('/market', marketRouter);

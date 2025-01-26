@@ -62,7 +62,7 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
                 alert("Authentication failed");
             }
         } catch (error) {
-            alert("Error during authentication");
+            alert("Error during authentication: " + error);
         }
     };
 

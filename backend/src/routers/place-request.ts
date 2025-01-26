@@ -3,6 +3,7 @@ import { Router } from "express";
 import prisma from "../lib/db";
 import { Stock, User } from "@prisma/client";
 import {isAuthenticated } from "../lib/isAuthenticated";
+import axios from "axios";
 
 const requestRouter = Router();
 
@@ -27,8 +28,11 @@ requestRouter.post("/", async (req, res) => {
         return;
     }
 
-    const latestPrice = stock.price[stock.price.length - 1];
-    const totalCost = latestPrice * amount;
+
+    const response = await axios.get(`http://localhost:8083/api/stock?ticker=${stock.symbol}`);
+    const price: any = response.data;
+    const totalCost = price * amount;
+
 
     try {
         const holdings = (user.holding as any)?.data || [];
@@ -71,8 +75,10 @@ requestRouter.put("/", async (req, res) => {
         return;
     }
 
-    const latestPrice = stock.price[stock.price.length - 1];
-    const totalCost = latestPrice * amount;
+    const response = await axios.get(`http://localhost:8083/api/stock?ticker=${stock.symbol}`);
+    const price: any = response.data;
+    const totalCost = price * amount;
+
 
     const holdings = (user.holding as any)?.data || [];
     const existingHolding = holdings.find((h: any) => h.stock === symbol);
