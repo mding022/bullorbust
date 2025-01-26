@@ -36,7 +36,7 @@ const Chart = () => {
 
         const fetchLiveData = async () => {
             try {
-                const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/balance/millerding222", {
+                const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/balance/test", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
