@@ -8,37 +8,12 @@ import { fakeHoldings, useNews } from "./data";
 import { motion } from "framer-motion";
 import AssetChart from './stream/assetchart'
 import StockQuote from "./stockquote";
+import Balance from "./stream/balance"
 
 const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [balance, setBalance] = useState<number | null>(null);
     const [isRegistering, setIsRegistering] = useState(false);
-
-    const fetchLiveData = async () => {
-        try {
-            if (!username) return;// Ensure username is set before fetching
-            console.log("here")
-            const response = await fetch(`https://bullorbust.matiass.ca/balance/millerding222`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            // const data = await response.json();
-            // setBalance(data.balance)
-        } catch (error) {
-            console.error("Error fetching live data:", error);
-        }
-    };
-
-
-    useEffect(() => {
-        fetchLiveData();
-        const interval = setInterval(fetchLiveData, 5000); // Fetch every 5 seconds
-        return () => clearInterval(interval); // Cleanup on unmount
-    }, []);
-
     const handleAuth = async () => {
         const endpoint = isRegistering
             ? process.env.NEXT_PUBLIC_BACKEND_URL + "/auth/register"
@@ -245,7 +220,7 @@ export default function BullOrBust() {
                             <CardTitle>Total Assets Under Management (AUM)</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1">
-                            <p className="text-3xl font-bold">${ }</p>
+                            <p className="text-3xl font-bold">$<Balance username={username}></Balance></p>
                             <p className="text-base text-muted-foreground pb-5">Profit/Loss: $0.00</p>
                         </CardContent>
                         <CardHeader>
