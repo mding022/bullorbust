@@ -22,7 +22,7 @@ export function useNews(): NewsItem[] {
     useEffect(() => {
         async function fetchNews() {
             try {
-                const response = await fetch('https://bullorbust.matiass.ca/bean/api/news');
+                const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/bean/api/news');
                 const data: string[] = await response.json(); // Assuming the response is an array of strings
 
                 const formattedNews = data.map((item) => ({
