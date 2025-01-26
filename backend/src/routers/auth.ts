@@ -1,11 +1,11 @@
 import { Router } from "express";
 import prisma from "../lib/db";
 import bcrypt from "bcrypt";
-
+import { isAuthenticated } from "../lib/isAuthenticated";
 export const authRouter = Router();
 
 // TODO: This needs to be a WebSocket.
-authRouter.get("/user-data", async (req, res) => {
+authRouter.get("/user-data", isAuthenticated, async (req, res) => {
     if(!req.user) {
         res.status(401).json({ error: "Unauthorized" });
         return;

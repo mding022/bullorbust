@@ -51,13 +51,20 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ username, password }),
-                credentials: 'include'
+                credentials: 'include',
             });
+
+            if (!response.ok) {
+                throw new Error('Authentication failed');
+            }
 
             const data = await response.json();
 
             if (data.userId) {
-                onLogin(username);
+                // Store session info
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', data.userId);
+                onLogin(data.userId);
             } else {
                 alert("Authentication failed");
             }
@@ -152,6 +159,54 @@ export default function BullOrBust() {
         setLoggedIn(true);
         setUsername(userId);
     };
+
+    const fetchUserData = async () => {
+        try {
+            // First check if we have stored session
+            const storedUsername = localStorage.getItem('username');
+            const storedLoggedIn = localStorage.getItem('isLoggedIn');
+
+            if (!storedLoggedIn) {
+                setLoggedIn(false);
+                return;
+            }
+
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/auth/user-data", {
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('username');
+                    setLoggedIn(false);
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            if (data?.userId) {
+                setLoggedIn(true);
+                setUsername(data.userId);
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', data.userId);
+            } else {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('username');
+                setLoggedIn(false);
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            setLoggedIn(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchUserData();
+    }, []);
 
     if (!loggedIn) {
         return <AuthPage onLogin={handleLoginSuccess} />;
