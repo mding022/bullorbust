@@ -5,7 +5,7 @@ type LiveBalanceProps = {
 };
 
 const LiveBalance = ({ username }: LiveBalanceProps) => {
-    const [balance, setBalance] = useState < number | null > (null);
+    const [balance, setBalance] = useState<number | null>(null);
 
     const fetchLiveData = async () => {
         try {
@@ -17,7 +17,7 @@ const LiveBalance = ({ username }: LiveBalanceProps) => {
                 },
             });
             const data = await response.json();
-            setBalance(data.balance);
+            setBalance(parseFloat(data.balance));
         } catch (error) {
             console.error("Error fetching live data:", error);
         }
@@ -29,7 +29,11 @@ const LiveBalance = ({ username }: LiveBalanceProps) => {
         return () => clearInterval(interval);
     }, [username]);
 
-    return <div className="text-3xl font-bold">${balance !== null ? balance : "Loading..."}</div>;
+    return (
+        <div className="text-3xl font-bold">
+            ${balance !== null ? balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
+        </div>
+    );
 };
 
 export default LiveBalance;
