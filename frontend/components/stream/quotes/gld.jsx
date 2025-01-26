@@ -36,7 +36,7 @@ const Chart = () => {
 
         const fetchLiveData = async () => {
             try {
-                const response = await fetch("http://localhost:8080/api/stock?ticker=GLD", {
+                const response = await fetch("https://bullorbust.matiass.ca/bean/api/stock?ticker=GLD", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
