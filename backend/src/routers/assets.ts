@@ -11,12 +11,6 @@ const assetsRouter = Router();
 
 assetsRouter.get("/:username", async (req: Request, res: Response) => {
   try {
-    // Check if user is authenticated
-    if (!req.user) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
-
     const { username } = req.params;
     const user = await prisma.user.findUnique({ where: { username } });
 

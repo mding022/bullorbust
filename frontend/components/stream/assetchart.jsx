@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { createChart } from "lightweight-charts";
 
-const Chart = () => {
+const Chart = ({ username }) => {
     const chartContainerRef = useRef(null);
 
     useEffect(() => {
@@ -36,19 +36,19 @@ const Chart = () => {
 
         const fetchLiveData = async () => {
             try {
-                const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/balance/millerding222", {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/balance/${username}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
                     },
                 });
 
-                const price = await response.json();
+                const data = await response.json();
 
-                if (typeof price === 'number') {
+                if (typeof data.balance === 'number') {
                     series.update({
                         time: Math.floor(Date.now() / 1000),
-                        value: price,
+                        value: data.balance,
                     });
                 }
             } catch (error) {
@@ -58,7 +58,7 @@ const Chart = () => {
 
         const intervalID = setInterval(() => {
             fetchLiveData();
-        }, 1000);
+        }, 500);
 
         window.addEventListener("resize", () => {
             chart.applyOptions({ height: 200 });
@@ -68,7 +68,7 @@ const Chart = () => {
             clearInterval(intervalID);
             chart.remove();
         };
-    }, []);
+    }, [username]);
 
     return <div ref={chartContainerRef} className="w-full h-52" />;
 };

@@ -10,7 +10,7 @@ const LiveBalance = ({ username }: LiveBalanceProps) => {
     const fetchLiveData = async () => {
         try {
             if (!username) return;
-            const response = await fetch(`https://bullorbust.matiass.ca/balance/${username}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/balance/${username}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -25,11 +25,11 @@ const LiveBalance = ({ username }: LiveBalanceProps) => {
 
     useEffect(() => {
         fetchLiveData();
-        const interval = setInterval(fetchLiveData, 5000);
+        const interval = setInterval(fetchLiveData, 500);
         return () => clearInterval(interval);
     }, [username]);
 
-    return <div>{balance !== null ? balance : "Loading..."}</div>;
+    return <div className="text-3xl font-bold">${balance !== null ? balance : "Loading..."}</div>;
 };
 
 export default LiveBalance;

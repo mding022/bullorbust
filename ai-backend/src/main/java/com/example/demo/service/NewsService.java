@@ -15,7 +15,7 @@ import org.springframework.http.*;
 public class NewsService {
     private final RestTemplate restTemplate = new RestTemplate();
     List<String> newsArr = new ArrayList<String>();
-    private final String apiKey = "AIzaSyC2ZzbmY-SkoreIYFXzIlg1ISh7wNhSs0U"; 
+    private final String apiKey = "AIzaSyCyABVGSs8_OD_RwW-4535O6ofZk9Lo7aI"; 
 
     public String generateAIResponse(String prompt) {
         if (apiKey == null || apiKey.isEmpty()) {

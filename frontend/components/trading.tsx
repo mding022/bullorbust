@@ -1,19 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { fakeHoldings, useNews } from "./data";
+import { useNews } from "./data";
 import { motion } from "framer-motion";
 import AssetChart from './stream/assetchart'
 import StockQuote from "./stockquote";
-import Balance from "./stream/balance"
+import LiveBalance from "./stream/balance";
+import Holdings from "./stream/holdings"
 
 const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [isRegistering, setIsRegistering] = useState(false);
+
+
     const handleAuth = async () => {
         const endpoint = isRegistering
             ? process.env.NEXT_PUBLIC_BACKEND_URL + "/auth/register"
@@ -26,25 +29,18 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ username, password }),
-                credentials: 'include',
+                credentials: 'include'
             });
-
-            if (!response.ok) {
-                throw new Error('Authentication failed');
-            }
 
             const data = await response.json();
 
             if (data.userId) {
-                // Store session info
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username', data.userId);
-                onLogin(data.userId);
+                onLogin(username);
             } else {
                 alert("Authentication failed");
             }
         } catch (error) {
-            alert("Error during authentication: " + error);
+            alert("Error during authentication");
         }
     };
 
@@ -135,54 +131,6 @@ export default function BullOrBust() {
         setUsername(userId);
     };
 
-    const fetchUserData = async () => {
-        try {
-            // First check if we have stored session
-            const storedUsername = localStorage.getItem('username');
-            const storedLoggedIn = localStorage.getItem('isLoggedIn');
-
-            if (!storedLoggedIn) {
-                setLoggedIn(false);
-                return;
-            }
-
-            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/auth/user-data", {
-                credentials: 'include'
-            });
-            
-            if (!response.ok) {
-                if (response.status === 401) {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('username');
-                    setLoggedIn(false);
-                    return;
-                }
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            if (data?.userId) {
-                setLoggedIn(true);
-                setUsername(data.userId);
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username', data.userId);
-            } else {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('username');
-                setLoggedIn(false);
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
-            setLoggedIn(false);
-        }
-    }
-
-    useEffect(() => {
-        fetchUserData();
-    }, []);
-
     if (!loggedIn) {
         return <AuthPage onLogin={handleLoginSuccess} />;
     }
@@ -220,13 +168,13 @@ export default function BullOrBust() {
                             <CardTitle>Total Assets Under Management (AUM)</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1">
-                            <p className="text-3xl font-bold">$<Balance username={username}></Balance></p>
+                            <LiveBalance username={username} />
                             <p className="text-base text-muted-foreground pb-5">Profit/Loss: $0.00</p>
                         </CardContent>
                         <CardHeader>
                             <CardTitle>Realtime BB Fund Value</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex-1"><AssetChart /></CardContent>
+                        <CardContent className="flex-1"><AssetChart username={username} /></CardContent>
                     </Card>
                     <Card className="flex-1 flex flex-col">
                         <CardHeader>
@@ -243,16 +191,7 @@ export default function BullOrBust() {
                                             <TableHead>Value</TableHead>
                                         </TableRow>
                                     </TableHeader>
-                                    <TableBody>
-                                        {fakeHoldings.map((holding) => (
-                                            <TableRow key={holding.symbol}>
-                                                <TableCell>{holding.symbol}</TableCell>
-                                                <TableCell>{holding.shares}</TableCell>
-                                                <TableCell>${holding.price.toFixed(2)}</TableCell>
-                                                <TableCell>${holding.value.toFixed(2)}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
+                                    <Holdings username={username} />
                                 </Table>
                             </ScrollArea>
                         </CardContent>
@@ -273,7 +212,7 @@ export default function BullOrBust() {
                                         <h2 className="text-xl font-bold">{news[0].title}</h2>
                                         <p className="text-base text-muted-foreground">{news[0].content}</p>
                                     </div>
-                                )}
+                                )} 
                                 <div className="overflow-y-auto h-36">
                                     {news.slice(1).map((article, index) => (
                                         <div key={index} className="text-xs opacity-70">
