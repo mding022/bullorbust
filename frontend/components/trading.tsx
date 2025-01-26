@@ -16,8 +16,8 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
 
     const handleAuth = async () => {
         const endpoint = isRegistering
-            ? "https://normal-heroic-wren.ngrok-free.app/auth/register"
-            : "https://normal-heroic-wren.ngrok-free.app/auth/login";
+            ? "https://bullorbust.matiass.ca/auth/register"
+            : "https://bullorbust.matiass.ca/auth/login";
 
         try {
             const response = await fetch(endpoint, {
