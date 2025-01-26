@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -12,7 +12,32 @@ import StockQuote from "./stockquote";
 const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [balance, setBalance] = useState<number | null>(null);
     const [isRegistering, setIsRegistering] = useState(false);
+
+    const fetchLiveData = async () => {
+        try {
+            if (!username) return;// Ensure username is set before fetching
+            console.log("here")
+            const response = await fetch(`https://bullorbust.matiass.ca/balance/millerding222`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            // const data = await response.json();
+            // setBalance(data.balance)
+        } catch (error) {
+            console.error("Error fetching live data:", error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchLiveData();
+        const interval = setInterval(fetchLiveData, 5000); // Fetch every 5 seconds
+        return () => clearInterval(interval); // Cleanup on unmount
+    }, []);
 
     const handleAuth = async () => {
         const endpoint = isRegistering
@@ -165,7 +190,7 @@ export default function BullOrBust() {
                             <CardTitle>Total Assets Under Management (AUM)</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1">
-                            <p className="text-3xl font-bold">$100,000</p>
+                            <p className="text-3xl font-bold">${ }</p>
                             <p className="text-base text-muted-foreground pb-5">Profit/Loss: $0.00</p>
                         </CardContent>
                         <CardHeader>
@@ -218,7 +243,7 @@ export default function BullOrBust() {
                                         <h2 className="text-xl font-bold">{news[0].title}</h2>
                                         <p className="text-base text-muted-foreground">{news[0].content}</p>
                                     </div>
-                                )} 
+                                )}
                                 <div className="overflow-y-auto h-36">
                                     {news.slice(1).map((article, index) => (
                                         <div key={index} className="text-xs opacity-70">
