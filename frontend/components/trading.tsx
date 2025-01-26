@@ -12,32 +12,7 @@ import StockQuote from "./stockquote";
 const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [balance, setBalance] = useState<number | null>(null);
     const [isRegistering, setIsRegistering] = useState(false);
-
-    const fetchLiveData = async () => {
-        try {
-            if (!username) return;// Ensure username is set before fetching
-            console.log("here")
-            const response = await fetch(`https://bullorbust.matiass.ca/balance/millerding222`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            // const data = await response.json();
-            // setBalance(data.balance)
-        } catch (error) {
-            console.error("Error fetching live data:", error);
-        }
-    };
-
-
-    useEffect(() => {
-        fetchLiveData();
-        const interval = setInterval(fetchLiveData, 5000); // Fetch every 5 seconds
-        return () => clearInterval(interval); // Cleanup on unmount
-    }, []);
 
     const handleAuth = async () => {
         const endpoint = isRegistering
@@ -125,9 +100,43 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
 };
 
 export default function BullOrBust() {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true);
     const [username, setUsername] = useState("");
     const news = useNews();
+
+    const [balance, setBalance] = useState<number | null>(null);
+    const [oldBalance, setOldBalance] = useState<number | null>(null);
+
+
+
+    const fetchLiveData = async () => {
+        try {
+            if (!username) return;// Ensure username is set before fetching
+            console.log("here")
+            const response = await fetch(`https://bullorbust.matiass.ca/balance/millerding222`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            setBalance(data.balance)
+        } catch (error) {
+            console.error("Error fetching live data:", error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchLiveData();
+        const interval = setInterval(fetchLiveData, 5000); // Fetch every 5 seconds
+        return () => clearInterval(interval); // Cleanup on unmount
+    }, []);
+
+    useEffect(() =>{
+        setOldBalance(balance);
+    }, [balance]);
+
 
     const containerVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -190,8 +199,8 @@ export default function BullOrBust() {
                             <CardTitle>Total Assets Under Management (AUM)</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1">
-                            <p className="text-3xl font-bold">${ }</p>
-                            <p className="text-base text-muted-foreground pb-5">Profit/Loss: $0.00</p>
+                            <p className="text-3xl font-bold">${balance}</p>
+                            <p className="text-base text-muted-foreground pb-5">Profit/Loss: {(oldBalance && balance) ? (oldBalance - balance) : "No Balance!"}</p>
                         </CardContent>
                         <CardHeader>
                             <CardTitle>Realtime BB Fund Value</CardTitle>

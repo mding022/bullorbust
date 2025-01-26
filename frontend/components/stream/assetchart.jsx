@@ -45,10 +45,10 @@ const Chart = () => {
 
                 const price = await response.json();
 
-                if (typeof price === 'number') {
+                if (typeof price.balance === 'number') {
                     series.update({
                         time: Math.floor(Date.now() / 1000),
-                        value: price,
+                        value: price.balance,
                     });
                 }
             } catch (error) {
