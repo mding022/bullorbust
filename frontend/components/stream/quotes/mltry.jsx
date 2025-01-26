@@ -36,16 +36,20 @@ attributionLogo: false
 
         const fetchLiveData = async () => {
             try {
-                const response = await fetch("https://normal-heroic-wren.ngrok-free.app/market/price/MLTRY", {
+                const response = await fetch("http://localhost:8080/api/stock?ticker=MLTRY", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        "ngrok-skip-browser-warning": "true"
                     },
                 });
-                const data = await response.json();
-                if (data.price) {
-                    series.update({ time: Math.floor(Date.now() / 1000), value: data.price });
+
+                const price = await response.json();
+
+                if (typeof price === 'number') {
+                    series.update({
+                        time: Math.floor(Date.now() / 1000),
+                        value: price,
+                    });
                 }
             } catch (error) {
                 console.error("Error fetching live data:", error);
