@@ -36,7 +36,7 @@ attributionLogo: false
 
         const fetchLiveData = async () => {
             try {
-                const response = await fetch("https://bullorbust.matiass.ca/bean/api/stock?ticker=FARMRS", {
+                const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/bean/api/stock?ticker=FARMRS", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

@@ -18,7 +18,7 @@ export default function StockQuote({ username }) {
         if (!quantity || !shares || !username) return;
         
         try {
-            const response = await fetch("https://bullorbust.matiass.ca/place-request", {
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/place-request", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export default function StockQuote({ username }) {
         if (!quantity || !shares || !username) return;
         
         try {
-            const response = await fetch("https://bullorbust.matiass.ca/place-request", {
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/place-request", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

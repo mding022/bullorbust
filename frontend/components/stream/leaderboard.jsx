@@ -9,7 +9,7 @@ export default function Leaderboard() {
     useEffect(() => {
         const handleAuth = async () => {
             try {
-                const response = await fetch("https://bullorbust.matiass.ca/leaderboard", {
+                const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/leaderboard", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

@@ -16,8 +16,8 @@ const AuthPage = ({ onLogin }: { onLogin: (userId: string) => void }) => {
     const [isRegistering, setIsRegistering] = useState(false);
     const handleAuth = async () => {
         const endpoint = isRegistering
-            ? "https://bullorbust.matiass.ca/auth/register"
-            : "https://bullorbust.matiass.ca/auth/login";
+            ? process.env.NEXT_PUBLIC_BACKEND_URL + "/auth/register"
+            : process.env.NEXT_PUBLIC_BACKEND_URL + "/auth/login";
 
         try {
             const response = await fetch(endpoint, {
