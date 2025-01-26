@@ -18,8 +18,8 @@ export function useNews(): NewsItem[] {
                 const data: string[] = await response.json(); // Assuming the response is an array of strings
 
                 const formattedNews = data.map((item) => ({
-                    time: "9:02", // Set the time to a fixed value
-                    title: "Bloomberg Equity Market Update", // Use a fixed title for all news
+                    time: "Real-time Data", // Set the time to a fixed value
+                    title: "Market Update", // Use a fixed title for all news
                     content: item, // Use the content from each news item
                 }));
 

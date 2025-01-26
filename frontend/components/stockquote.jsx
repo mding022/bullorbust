@@ -16,13 +16,13 @@ export default function StockQuote({ username }) {
 
     const handleBuy = async () => {
         if (!quantity || !shares || !username) return;
-        
+
         try {
             const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/place-request", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "ngrok-skip-browser-warning": "true" 
+                    "ngrok-skip-browser-warning": "true"
                 },
                 body: JSON.stringify({
                     symbol: shares,
@@ -45,7 +45,7 @@ export default function StockQuote({ username }) {
 
     const handleSell = async () => {
         if (!quantity || !shares || !username) return;
-        
+
         try {
             const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/place-request", {
                 method: "PUT",
@@ -138,7 +138,7 @@ export default function StockQuote({ username }) {
                     placeholder="Shares"
                     className="w-1/4 p-2 border rounded ml-4"
                     value={shares}
-                    onChange={(e) => setShares(e.target.value)}
+                    onChange={(e) => setShares(e.target.value.toUpperCase())}
                 />
             </div>
             {popupVisible && (
