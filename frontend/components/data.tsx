@@ -39,7 +39,7 @@ export function useNews(): NewsItem[] {
 
         fetchNews(); // Fetch news on component mount
 
-        const interval = setInterval(fetchNews, 100);
+        const interval = setInterval(fetchNews, 500);
 
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);
