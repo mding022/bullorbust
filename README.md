@@ -1,13 +1,11 @@
 
-
-# Bull or Bust
 <br />
 <div align="center">
   <a href="https://qhacks.matiass.ca/">
     <img src="frontend/app/favicon.ico" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">Bull or Bust Interactive Platform</h3>
 
   <p align="center">
     An interactive and real-time AI Financialtrading simulator
